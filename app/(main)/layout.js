@@ -3,8 +3,10 @@ import DashBoardProvider from "./provider";
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div>
-      <DashBoardProvider>{children}</DashBoardProvider>
+    <div className="bg-secondary">
+      <DashBoardProvider>
+        <div className="p-10">{children}</div>
+      </DashBoardProvider>
     </div>
   );
 };
