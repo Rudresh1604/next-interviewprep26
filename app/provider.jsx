@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 const Provider = ({ children }) => {
   const [user, setUser] = useState(null);
   useEffect(() => {
-    CreateNewUser();
+    if (!user) CreateNewUser();
   }, []);
   const CreateNewUser = () => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^1.2.22",
     "@hookform/resolvers": "^5.1.1",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
@@ -18,6 +19,9 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@supabase/supabase-js": "^2.50.3",
+    "@vapi-ai/web": "^2.3.8",
+    "ai": "^4.3.17",
+    "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "firebase": "^11.10.0",
@@ -30,6 +34,7 @@
     "react-icons": "^5.5.0",
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
+    "uuid": "^11.1.0",
     "zod": "^3.25.74"
   },
   "devDependencies": {

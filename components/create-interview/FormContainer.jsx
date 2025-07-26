@@ -13,7 +13,7 @@ import { InterviewType } from "@/services/Constants";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 
-const FormContainer = ({ onHandleInputChange }) => {
+const FormContainer = ({ onHandleInputChange, goToNext }) => {
   const [interviewType, setInterviewType] = useState([]);
   useEffect(() => {
     if (interviewType) {
@@ -22,7 +22,6 @@ const FormContainer = ({ onHandleInputChange }) => {
   }, [interviewType]);
   const addInterviewType = (type) => {
     if (interviewType.includes(type)) {
-      // interviewType.
       const result = interviewType.filter((item) => item != type);
       setInterviewType(result);
     } else {
@@ -83,7 +82,7 @@ const FormContainer = ({ onHandleInputChange }) => {
           ))}
         </div>
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end" onClick={() => goToNext()}>
         <Button>
           Generate Question <ArrowRight />{" "}
         </Button>

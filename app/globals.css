@@ -143,4 +143,11 @@
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.439 0 0);
   }
+  section[aria-label="Notifications alt+T"] {
+    position: absolute !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden !important;
+    background: transparent !important;
+  }
 }
