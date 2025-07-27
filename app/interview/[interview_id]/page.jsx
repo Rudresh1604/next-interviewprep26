@@ -15,6 +15,7 @@ const InterviewPage = () => {
   const [interviewData, setInterviewData] = useState(null);
   const [userName, setUserName] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userEmail, setUserEmail] = useState(null);
   const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext);
   const router = useRouter();
   const getInterviewDetail = async () => {
@@ -48,6 +49,7 @@ const InterviewPage = () => {
       console.log(Interviews[0]);
       setInterviewInfo({
         userName: userName,
+        userEmail: userEmail,
         interviewData: Interviews[0],
       });
       setLoading(false);
@@ -90,6 +92,14 @@ const InterviewPage = () => {
             onChange={(e) => setUserName(e.target.value)}
           />
         </div>
+        <div className="lg:w-[60%] w-full ">
+          <h2>Enter your Email:</h2>
+          <Input
+            className="mt-2"
+            placeholder="e.g. abc@email.com"
+            onChange={(e) => setUserEmail(e.target.value)}
+          />
+        </div>
         <div className="p-3 bg-blue-100 flex gap-4 rounded-xl mt-5 lg:w-[60%] w-full">
           <Info />
           <div>
@@ -109,7 +119,7 @@ const InterviewPage = () => {
         </div>
         <Button
           className="mt-5 lg:w-[60%] w-full  font-bold"
-          disabled={loading || !userName}
+          disabled={loading || !userName || !userEmail}
           onClick={() => onJoinInterview()}
         >
           {loading ? <Loader2Icon className="animate-spin" /> : <Video />} Join

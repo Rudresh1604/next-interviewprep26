@@ -1,11 +1,281 @@
 "use client";
 import { InterviewDataContext } from "@/context/InterViewDataContext";
+import Vapi from "@vapi-ai/web";
 import { Mic, Phone, Timer } from "lucide-react";
 import Image from "next/image";
-import React, { useContext } from "react";
+
+import React, { useContext, useEffect, useState } from "react";
+import AlertConfirmation from "./_components/AlertConfirmation";
+import { toast } from "sonner";
+import axios from "axios";
+import { supabase } from "@/services/supabaseClient";
+import { useParams, useRouter } from "next/navigation";
 
 const InterviewStart = () => {
   const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext);
+  const vapi = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY);
+  const [activeUser, setActiveUser] = useState(true);
+  const [callActive, setCallActive] = useState(false);
+  const { interview_id } = useParams();
+  const router = useRouter();
+  const [conversation, setConversation] = useState([
+    {
+      role: "system",
+      content:
+        "You are an AI voice assistant conducting interviews.\n\nYour job is to ask candidates the provided interview questions and assess their responses.\n\nBegin the conversation with a friendly introduction, setting a relaxed yet professional tone. \nExample: \"Hey there! Welcome to your interview for Full Stack Developer. Let's get started with some lighter questions.\"\n\nAsk one question at a time and wait for the candidate's response before proceeding. Keep the questions clear and concise.\n\nBelow are the questions to ask one by one:\nQuestions: What are your preferred tools and technologies for full-stack development, and why?,Explain the concept of microservices architecture. What are the advantages and disadvantages of using microservices, and when would you choose it over a monolithic architecture?,Describe a time when you had to work with a team to deliver a complex project. What were your responsibilities, and how did you collaborate with your team members?,Let's say you have a web applicati...",
+    },
+    {
+      role: "assistant",
+      content:
+        "Hi, Ram. How are you? Ready for your interview on Fullstack Developer.",
+    },
+    {
+      role: "user",
+      content: "Yes. I'm ready for my first 30 to 20.",
+    },
+    {
+      role: "assistant",
+      content:
+        "Awesome. Let's dive right in. First question, what are your preferred tools and technologies for full stack development and why?",
+    },
+    {
+      role: "user",
+      content:
+        "My preferred tools and technologies for full stack development are for ASMA front end technology, and Node JS as my back end technology. And for database, I use MongoDB.",
+    },
+    {
+      role: "assistant",
+      content:
+        "Great choices. Down your Tissor Folif. But your teeth make them Angular, Node. Js, and MongoDB make a solid stack. Especially when you're dealing with scalable real time applications. Could you also share why these are your go to tools? Do they fit specific types of projects or challenges you like tackling?",
+    },
+    {
+      role: "user",
+      content: "These are very easy to learn and highly scalable.",
+    },
+    {
+      role: "assistant",
+      content:
+        "Solid reasoning. Uh, Shankar and Oscar Otero would have tried DuPont's Solid reasoning. Ease of learning definitely helps with onboarding and productivity, and scalability is key for growing applications. Nice answer. Alright. Next up, could you explain the concept of microservices architecture? What are the advantages and disadvantages, and when would you choose it over a monolithic architecture?",
+    },
+    {
+      role: "user",
+      content: "I haven't started about microservices in that.",
+    },
+    {
+      role: "assistant",
+      content:
+        "No problem at all. Let me give you a quick hint. Microservices architecture breaks down an application into smaller independent services that work together. Can you think of any pros or cons compared to a single unified monolithic architecture? Maybe focus on scalability or maintenance?",
+    },
+    {
+      role: "user",
+      content: "Okay.",
+    },
+    {
+      role: "assistant",
+      content:
+        "Take your time. Think about how microservices might make development and scaling easier while also introducing chat Would you like me to rephrase the question or expand on it a bit?",
+    },
+    {
+      role: "user",
+      content: "No. Can we move to the next person?",
+    },
+    {
+      role: "assistant",
+      content:
+        "Sure. No problem. Let's move forward. Here's the next question. Describe a time when you had to work with team to deliver a complex project. What were your responsibilities, and how did you collaborate with your team members?",
+    },
+    {
+      role: "user",
+      content:
+        "What were the problems they're facing. And accordingly, I have planned if I could reserve it or not.",
+    },
+    {
+      role: "assistant",
+      content: "Got it.",
+    },
+    {
+      role: "user",
+      content: "And then we completed the project.",
+    },
+    {
+      role: "assistant",
+      content:
+        "That sounds proactive. It's great that you focused on identifying problems upfront and finding solutions collaboratively. Teamwork and problem solving are key. Nice response. Alright. Moving on. Let's say you have a web application that is experiencing slow performance. What steps would you take to identify the bottleneck and improve performance?",
+    },
+    {
+      role: "user",
+      content: "Could you please repeat once more?",
+    },
+    {
+      role: "assistant",
+      content:
+        "Sure. Let's say a web application is running slow. What steps would you take to identify what's causing the slowdown, the bottleneck, and",
+    },
+    {
+      role: "user",
+      content: "Firstly, I will look at the API logs. Uh, I will improve the",
+    },
+    {
+      role: "assistant",
+      content: "Great.",
+    },
+    {
+      role: "user",
+      content:
+        "data retrieval. And test API the API request And, accordingly, I will monitor the performance. And based on that, I will take necessary actions",
+    },
+    {
+      role: "assistant",
+      content:
+        "That's a solid approach. API logs are definitely a great starting point to locate inefficient and monitoring performance helps with pinpointing the root cause. Optimizing data retrieval and testing requests show a thorough process. Nicely done. Alright. Let's tackle the next 1. How do you stay up to date with the latest trends and technologies in full stack development?",
+    },
+  ]);
+  useEffect(() => {
+    interviewInfo && startCall();
+  }, [interviewInfo]);
+  const startCall = () => {
+    let questionList;
+    interviewInfo?.interviewData?.questionList?.forEach((item, index) => {
+      questionList = item?.question + "," + questionList;
+    });
+    const assistantOptions = {
+      name: "AI Recruiter",
+
+      firstMessage: `Hi ${interviewInfo?.userName}, how are you? Ready for your interview on ${interviewInfo?.interviewData?.jobPosition}?`,
+
+      transcriber: {
+        provider: "deepgram",
+        model: "nova-2",
+        language: "en-US",
+      },
+
+      voice: {
+        provider: "playht",
+        voiceId: "Jennifer",
+      },
+
+      model: {
+        provider: "openai",
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content: `
+You are an AI voice assistant conducting interviews.
+
+Your job is to ask candidates the provided interview questions and assess their responses.
+
+Begin the conversation with a friendly introduction, setting a relaxed yet professional tone. 
+Example: "Hey there! Welcome to your interview for ${interviewInfo?.interviewData?.jobPosition}. Let's get started with some lighter questions."
+
+Ask one question at a time and wait for the candidate's response before proceeding. Keep the questions clear and concise.
+
+Below are the questions to ask one by one:
+Questions: ${questionList}
+
+If the candidate struggles, offer hints or rephrase the question without giving away the answer.
+Example: "Need a hint? Think about how React tracks component updates!"
+
+Provide brief, encouraging feedback after each answer.
+Examples:
+- "Nice! That's a solid answer."
+- "Hmm, not quite! Want to try again?"
+
+Keep the conversation natural and engaging—use casual phrases like:
+- "Alright, next up..."
+- "Let's tackle a tricky one!"
+
+After 5-7 questions, wrap up the interview smoothly by summarizing their performance.
+Example: "That was great! You handled some tough questions well. Keep sharpening your skills!"
+
+End on a positive note:
+"Thanks for chatting! Hope to see you crushing projects soon!"
+
+Key Guidelines:
+- Be friendly, engaging, and witty
+- Keep responses short and natural, like a real conversation
+- Adapt based on the candidate's confidence level
+- Ensure the interview remains focused on React
+        `.trim(),
+          },
+        ],
+      },
+    };
+    // vapi.start(assistantOptions);
+  };
+
+  useEffect(() => {
+    const handleMessage = (message) => {
+      console.log(message);
+      console.log(message?.conversation);
+      if (message?.conversation) setConversation(message?.conversation);
+    };
+    vapi.on("message", handleMessage);
+    vapi.on("speech-start", () => {
+      console.log("Assistant started speaking");
+      setActiveUser(false);
+    });
+
+    vapi.on("speech-end", () => {
+      console.log("Assistant stopped speaking");
+      setActiveUser(true);
+    });
+
+    vapi.on("call-start", () => {
+      console.log("Call started");
+      setCallActive(true);
+      toast("Call connected...");
+    });
+
+    vapi.on("call-end", () => {
+      console.log("Call ended");
+      setCallActive(false);
+      toast("Call Ended...");
+    });
+    return () => {
+      vapi.off("message", handleMessage);
+      vapi.off("call-end", () => console.log("Call End is offed"));
+      vapi.off("call-start", () => console.log("Call start is offed"));
+      vapi.off("speech-start", () => console.log("Speech start is offed"));
+      vapi.off("speech-end", () => console.log("Speech End is OFF"));
+    };
+  }, []);
+  const stopInterview = () => {
+    setCallActive(false);
+    generateFeedback();
+    vapi.stop();
+  };
+
+  const generateFeedback = async () => {
+    if (!conversation) return;
+    // func
+    try {
+      const res = await axios.post("/api/ai-feedback", {
+        conversation: conversation,
+      });
+
+      console.log(res?.data);
+      const content = res?.data?.data?.feedback;
+
+      console.log(content);
+      let recommended = content?.recommendation == "No" ? 0 : 1;
+      const { data: InterviewFeedback, error } = await supabase
+        .from("interview-feedback")
+        .insert([
+          {
+            userName: interviewInfo?.userName,
+            userEmail: interviewInfo?.userEmail,
+            interview_id: interview_id,
+            feedback: content,
+            recommended: recommended,
+          },
+        ])
+        .select();
+      router.replace(`/interview/${interview_id}/completed`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="px-20 mt-16 md:px-28 lg:px-43 xl:px-52">
       <h2 className="flex justify-between items-center font-bold text-xl">
@@ -17,25 +287,37 @@ const InterviewStart = () => {
       </h2>
       <div className="grid grid-cols-1 mt-7 md:grid-cols-2 gap-7">
         <div className="bg-white h-[400px] rounded-lg border flex flex-col items-center justify-center gap-3">
-          <Image
-            src={"/ai-avatar2.png"}
-            alt="AI"
-            width={90}
-            height={90}
-            className="sm:w-auto sm:h-auto md:w-[160px] md:h-[160px] rounded-full object-cover"
-          />
+          <div className="relative">
+            {callActive && !activeUser && (
+              <span className="absolute inset-0 rounded-full bg-blue-500 opacity-75 animate-ping" />
+            )}
+            <Image
+              src={"/ai-avatar2.png"}
+              alt="AI"
+              width={90}
+              height={90}
+              className="sm:w-auto sm:h-auto md:w-[160px] md:h-[160px] rounded-full object-cover"
+            />
+          </div>
           <h2>AI Recruiter</h2>
         </div>
         <div className="bg-white h-[400px] rounded-lg border flex flex-col gap-3 items-center justify-center">
-          <h2 className="text-5xl bg-primary text-white rounded-full p-5 sm:w-auto sm:h-auto md:w-[160px] md:h-[160px] flex justify-center items-center">
-            {interviewInfo?.userName[0]}{" "}
-          </h2>
+          <div className="relative">
+            {callActive && activeUser && (
+              <span className="absolute inset-0 rounded-full bg-blue-500 opacity-75 animate-ping" />
+            )}
+            <h2 className="text-5xl bg-primary text-white rounded-full p-5 sm:w-auto sm:h-auto md:w-[160px] md:h-[160px] flex justify-center items-center">
+              {interviewInfo?.userName[0]}{" "}
+            </h2>
+          </div>
           <h2>{interviewInfo?.userName} </h2>
         </div>
       </div>
       <div className="flex items-center mt-7 justify-center gap-7">
         <Mic className="h-12 w-12 p-2 bg-gray-300 rounded-full cursor-pointer" />
-        <Phone className="h-12 w-12 p-3 text-white bg-red-500 rounded-full cursor-pointer" />
+        <AlertConfirmation stopInterview={() => stopInterview()}>
+          <Phone className="h-12 w-12 p-3 text-white bg-red-500 rounded-full cursor-pointer" />
+        </AlertConfirmation>
       </div>
       <h2 className="text-sm text-gray-400 text-center mt-5">
         Interview is in progress....

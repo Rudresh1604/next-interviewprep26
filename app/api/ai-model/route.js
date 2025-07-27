@@ -1,10 +1,6 @@
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 
-export async function GET() {
-  return Response.json({ success: true, data: "THANK YOU" }, { status: 200 });
-}
-
 export async function POST(request) {
   const { type, jobPosition, duration, jobDescription } = await request.json();
   try {
