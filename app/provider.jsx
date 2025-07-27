@@ -9,8 +9,9 @@ const Provider = ({ children }) => {
   useEffect(() => {
     if (!user) CreateNewUser();
   }, []);
-  const CreateNewUser = () => {
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
+
+  const CreateNewUser = async () => {
+    await supabase.auth.getUser().then(async ({ data: { user } }) => {
       // check if user already exist or not
       let { data: Users, error } = await supabase
         .from("Users")

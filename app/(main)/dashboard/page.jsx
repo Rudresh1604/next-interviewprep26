@@ -7,6 +7,7 @@ import React from "react";
 
 const Dashboard = () => {
   const { user } = useUser();
+
   return (
     <div>
       {/* <WelcomeContainer /> */}

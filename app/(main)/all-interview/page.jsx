@@ -1,12 +1,12 @@
 "use client";
-import { Video } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { supabase } from "@/services/supabaseClient";
 import { useUser } from "@/app/provider";
-import InterviewCard from "./InterviewCard";
+import InterviewCard from "@/components/InterviewCard";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/services/supabaseClient";
+import { Video } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
-const LatestInterviewsList = () => {
+const page = () => {
   const [interviewList, setInterviewList] = useState([]);
   const { user } = useUser();
   useEffect(() => {
@@ -19,8 +19,8 @@ const LatestInterviewsList = () => {
         .from("Interviews")
         .select("*")
         .eq("userEmail", user?.email)
-        .order("id", { ascending: false })
-        .limit(8);
+        .order("id", { ascending: false });
+
       console.log(Interviews);
       setInterviewList(Interviews);
     } catch (error) {
@@ -29,7 +29,7 @@ const LatestInterviewsList = () => {
   };
   return (
     <div className="my-5">
-      <h2 className="text-xl font-bold">Previously Created Interviews</h2>
+      <h2 className="text-xl font-bold">All Previously Created Interviews</h2>
       <div className="w-full mt-5 bg-white rounded-2xl border border-gray-200">
         {interviewList?.length == 0 && (
           <div className="p-5 flex flex-col justify-center items-center gap-3">
@@ -50,4 +50,4 @@ const LatestInterviewsList = () => {
   );
 };
 
-export default LatestInterviewsList;
+export default page;
