@@ -28,14 +28,17 @@ const InterviewPage = () => {
 
       setInterviewData(Interviews[0]);
       if (Interviews.length == 0) {
+        router.push("/");
         toast("Incorrect Interview Link !");
       }
       setLoading(false);
     } catch (error) {
       toast("Incorrect Interview Link !");
+
       console.log(error);
 
       setLoading(false);
+      router.push("/");
     }
   };
 

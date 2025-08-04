@@ -1,6 +1,6 @@
 "use client";
 import { Video } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { supabase } from "@/services/supabaseClient";
 import { useUser } from "@/app/provider";
@@ -8,11 +8,13 @@ import InterviewCard from "./InterviewCard";
 
 const LatestInterviewsList = () => {
   const [interviewList, setInterviewList] = useState([]);
+
   const { user } = useUser();
   useEffect(() => {
     console.log(user);
     user && getInterviewList();
   }, [user]);
+
   const getInterviewList = async () => {
     try {
       const { data: Interviews, error } = await supabase
@@ -35,7 +37,7 @@ const LatestInterviewsList = () => {
           <div className="p-5 flex flex-col justify-center items-center gap-3">
             <Video className="p-3 text-primary cursor-pointer bg-blue-50 rounded-full h-12 w-12" />
             <h2>You don`t have any interview created!</h2>
-            <Button>+ Create New Interview</Button>
+            <Button className="cursor-pointer">+ Create New Interview</Button>
           </div>
         )}
       </div>

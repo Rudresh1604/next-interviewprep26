@@ -1,10 +1,13 @@
+"use client";
 import moment from "moment";
 import React from "react";
 import { Button } from "./ui/button";
 import { ArrowRight, Copy, Send } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const InterviewCard = ({ interview, viewDetail = false }) => {
+  const router = useRouter();
   const copyLink = () => {
     const url =
       process.env.NEXT_PUBLIC_HOST_URL + "/" + interview?.interview_id;
@@ -18,6 +21,9 @@ const InterviewCard = ({ interview, viewDetail = false }) => {
 
     const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
     window.location.href = mailtoLink;
+  };
+  const handleViewDetail = () => {
+    router.push(`scheduled-interview/${interview?.interview_id}/details`);
   };
 
   return (
@@ -47,7 +53,11 @@ const InterviewCard = ({ interview, viewDetail = false }) => {
           </Button>
         </div>
       ) : (
-        <Button variant="outline" className="mt-3 w-full">
+        <Button
+          variant="outline"
+          onClick={() => handleViewDetail()}
+          className="mt-3 w-full cursor-pointer"
+        >
           View Details <ArrowRight className="h-4" />
         </Button>
       )}

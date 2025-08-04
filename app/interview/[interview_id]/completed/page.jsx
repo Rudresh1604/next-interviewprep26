@@ -1,6 +1,10 @@
+"use client";
 import React from "react";
 
 import { Home, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Lottie from "lottie-react";
+import interviewAnimation from "../../../../lib/constants/interviewComplete.json";
 
 const InterviewComplete = () => {
   return (
@@ -39,23 +43,8 @@ const InterviewComplete = () => {
 
         {/* Image */}
 
-        <div className="rounded-xl overflow-hidden shadow-lg">
-          <img
-            src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
-            alt="Interview Illustration"
-            className="w-full h-auto object-cover max-w-4xl"
-            style={{
-              backgroundImage: "url(https://i.imgur.com/g5B0C9N.png)",
-
-              backgroundSize: "cover",
-
-              backgroundPosition: "center",
-
-              width: "800px",
-
-              height: "400px",
-            }}
-          />
+        <div className="rounded-xl flex justify-center w-full h-[400px] md:h-[600px] overflow-hidden shadow-lg">
+          <Lottie animationData={interviewAnimation} loop={true} />
         </div>
 
         {/* Next Steps */}

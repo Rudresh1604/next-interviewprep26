@@ -18,118 +18,7 @@ const InterviewStart = () => {
   const [callActive, setCallActive] = useState(false);
   const { interview_id } = useParams();
   const router = useRouter();
-  const [conversation, setConversation] = useState([
-    {
-      role: "system",
-      content:
-        "You are an AI voice assistant conducting interviews.\n\nYour job is to ask candidates the provided interview questions and assess their responses.\n\nBegin the conversation with a friendly introduction, setting a relaxed yet professional tone. \nExample: \"Hey there! Welcome to your interview for Full Stack Developer. Let's get started with some lighter questions.\"\n\nAsk one question at a time and wait for the candidate's response before proceeding. Keep the questions clear and concise.\n\nBelow are the questions to ask one by one:\nQuestions: What are your preferred tools and technologies for full-stack development, and why?,Explain the concept of microservices architecture. What are the advantages and disadvantages of using microservices, and when would you choose it over a monolithic architecture?,Describe a time when you had to work with a team to deliver a complex project. What were your responsibilities, and how did you collaborate with your team members?,Let's say you have a web applicati...",
-    },
-    {
-      role: "assistant",
-      content:
-        "Hi, Ram. How are you? Ready for your interview on Fullstack Developer.",
-    },
-    {
-      role: "user",
-      content: "Yes. I'm ready for my first 30 to 20.",
-    },
-    {
-      role: "assistant",
-      content:
-        "Awesome. Let's dive right in. First question, what are your preferred tools and technologies for full stack development and why?",
-    },
-    {
-      role: "user",
-      content:
-        "My preferred tools and technologies for full stack development are for ASMA front end technology, and Node JS as my back end technology. And for database, I use MongoDB.",
-    },
-    {
-      role: "assistant",
-      content:
-        "Great choices. Down your Tissor Folif. But your teeth make them Angular, Node. Js, and MongoDB make a solid stack. Especially when you're dealing with scalable real time applications. Could you also share why these are your go to tools? Do they fit specific types of projects or challenges you like tackling?",
-    },
-    {
-      role: "user",
-      content: "These are very easy to learn and highly scalable.",
-    },
-    {
-      role: "assistant",
-      content:
-        "Solid reasoning. Uh, Shankar and Oscar Otero would have tried DuPont's Solid reasoning. Ease of learning definitely helps with onboarding and productivity, and scalability is key for growing applications. Nice answer. Alright. Next up, could you explain the concept of microservices architecture? What are the advantages and disadvantages, and when would you choose it over a monolithic architecture?",
-    },
-    {
-      role: "user",
-      content: "I haven't started about microservices in that.",
-    },
-    {
-      role: "assistant",
-      content:
-        "No problem at all. Let me give you a quick hint. Microservices architecture breaks down an application into smaller independent services that work together. Can you think of any pros or cons compared to a single unified monolithic architecture? Maybe focus on scalability or maintenance?",
-    },
-    {
-      role: "user",
-      content: "Okay.",
-    },
-    {
-      role: "assistant",
-      content:
-        "Take your time. Think about how microservices might make development and scaling easier while also introducing chat Would you like me to rephrase the question or expand on it a bit?",
-    },
-    {
-      role: "user",
-      content: "No. Can we move to the next person?",
-    },
-    {
-      role: "assistant",
-      content:
-        "Sure. No problem. Let's move forward. Here's the next question. Describe a time when you had to work with team to deliver a complex project. What were your responsibilities, and how did you collaborate with your team members?",
-    },
-    {
-      role: "user",
-      content:
-        "What were the problems they're facing. And accordingly, I have planned if I could reserve it or not.",
-    },
-    {
-      role: "assistant",
-      content: "Got it.",
-    },
-    {
-      role: "user",
-      content: "And then we completed the project.",
-    },
-    {
-      role: "assistant",
-      content:
-        "That sounds proactive. It's great that you focused on identifying problems upfront and finding solutions collaboratively. Teamwork and problem solving are key. Nice response. Alright. Moving on. Let's say you have a web application that is experiencing slow performance. What steps would you take to identify the bottleneck and improve performance?",
-    },
-    {
-      role: "user",
-      content: "Could you please repeat once more?",
-    },
-    {
-      role: "assistant",
-      content:
-        "Sure. Let's say a web application is running slow. What steps would you take to identify what's causing the slowdown, the bottleneck, and",
-    },
-    {
-      role: "user",
-      content: "Firstly, I will look at the API logs. Uh, I will improve the",
-    },
-    {
-      role: "assistant",
-      content: "Great.",
-    },
-    {
-      role: "user",
-      content:
-        "data retrieval. And test API the API request And, accordingly, I will monitor the performance. And based on that, I will take necessary actions",
-    },
-    {
-      role: "assistant",
-      content:
-        "That's a solid approach. API logs are definitely a great starting point to locate inefficient and monitoring performance helps with pinpointing the root cause. Optimizing data retrieval and testing requests show a thorough process. Nicely done. Alright. Let's tackle the next 1. How do you stay up to date with the latest trends and technologies in full stack development?",
-    },
-  ]);
+  const [conversation, setConversation] = useState(null);
   useEffect(() => {
     interviewInfo && startCall();
   }, [interviewInfo]);
@@ -201,7 +90,7 @@ Key Guidelines:
         ],
       },
     };
-    // vapi.start(assistantOptions);
+    vapi.start(assistantOptions);
   };
 
   useEffect(() => {
@@ -223,6 +112,7 @@ Key Guidelines:
 
     vapi.on("call-start", () => {
       console.log("Call started");
+
       setCallActive(true);
       toast("Call connected...");
     });

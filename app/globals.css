@@ -53,7 +53,13 @@
   --popover-foreground: oklch(0.13 0.028 261.692);
   --primary: #0377fc;
   --primary-foreground: oklch(0.985 0.002 247.839);
-  --secondary: oklch(0.967 0.003 264.542);
+  --secondary: oklch(96.7% 0.003 264.542);
+  --midnight: oklch(21.7% 0.01 260);
+  --midnightLighter: oklch(29% 0.01 260);
+  --midnightLightest: oklch(36% 0.01 260);
+  --seaGreen: oklch(66% 0.15 165);
+  --electricBlue: oklch(91.6% 0.114 218.26);
+  --electricBlueDark: oklch(70.3% 0.104 218.26);
   --secondary-foreground: oklch(0.21 0.034 264.665);
   --muted: oklch(0.967 0.003 264.542);
   --muted-foreground: oklch(0.551 0.027 264.364);
@@ -150,4 +156,14 @@
     overflow: hidden !important;
     background: transparent !important;
   }
+}
+
+.bg-midnight {
+  @apply bg-[color:var(--midnight)];
+}
+.text-electricBlue {
+  @apply text-[color:var(--electricBlue)];
+}
+.bg-electricBlueDark {
+  @apply bg-[color:var(--electricBlueDark)];
 }
