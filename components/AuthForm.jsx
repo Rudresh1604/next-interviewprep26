@@ -11,15 +11,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import FormFieldComponent from "./FormField";
 import { useRouter } from "next/navigation";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  getAuth,
-} from "firebase/auth";
-import { auth } from "@/firebase/client";
-import { signIn, signup } from "@/lib/actions/auth.action";
+
 import { supabase } from "@/services/supabaseClient";
 
 const authFormSchema = (type) => {
@@ -47,39 +39,32 @@ const AuthForm = ({ type }) => {
     console.log(values);
     try {
       if (type === "sign-up") {
-        const { name, email, password } = values;
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
+        const { email, password, name } = values;
+        const { data, error } = await supabase.auth.signUp({
           email,
-          password
-        );
-        const result = await signup({
-          uid: userCredential.user.uid,
-          name: name ? name : "",
-          email: email,
           password,
+          options: {
+            data: { name },
+          },
         });
-        if (!result?.success) {
-          toast.error(result?.message);
+        if (error) {
+          toast.error(error.message);
           return;
         }
         toast.success("Account created successfully. Please sign in");
         router.push("/signin");
       } else {
         const { email, password } = values;
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
-          password
-        );
-        const idToken = await userCredential.user.getIdToken();
-        if (!idToken) {
-          toast.error("Sign in failed");
+          password,
+        });
+        if (error) {
+          toast.error(error.message);
           return;
         }
-        await signIn({ email, idToken });
         toast.success("Signed in successfully!");
-        router.push("/");
+        router.push("/dashboard"); // or wherever
       }
     } catch (error) {
       console.error(error);
@@ -88,57 +73,65 @@ const AuthForm = ({ type }) => {
   }
 
   // ! Sign In using firebase
-  const onGoogleLogin = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const idToken = await user.getIdToken();
+  // const onGoogleLogin = async () => {
+  //   try {
+  //     console.log("google called");
 
-      const res = await signIn({
-        email: user.email,
-        idToken,
-      });
+  //     const provider = new GoogleAuthProvider();
+  //     const result = await signInWithPopup(auth, provider);
+  //     const user = result.user;
+  //     const idToken = await user.getIdToken();
 
-      if (!res.success) {
-        // Try to sign up if user doesn't exist
-        const signUpRes = await signup({
-          uid: user.uid,
-          name: user.displayName || "",
-          email: user.email,
-        });
+  //     const res = await signIn({
+  //       email: user.email,
+  //       idToken,
+  //     });
 
-        if (!signUpRes.success) {
-          toast.error(signUpRes.message);
-          return;
-        }
+  //     if (!res.success) {
+  //       // Try to sign up if user doesn't exist
+  //       const signUpRes = await signup({
+  //         uid: user.uid,
+  //         name: user.displayName || "",
+  //         email: user.email,
+  //       });
 
-        // Try sign in again after successful sign up
-        const reSignIn = await signIn({ email: user.email, idToken });
-        if (!reSignIn.success) {
-          toast.error(reSignIn.message);
-          return;
-        }
+  //       if (!signUpRes.success) {
+  //         toast.error(signUpRes.message);
+  //         return;
+  //       }
 
-        toast.success("Signed in successfully!");
-        router.push("/");
-        return;
-      }
+  //       // Try sign in again after successful sign up
+  //       const reSignIn = await signIn({ email: user.email, idToken });
+  //       if (!reSignIn.success) {
+  //         toast.error(reSignIn.message);
+  //         return;
+  //       }
 
-      toast.success("Signed in successfully!");
-      router.push("/");
-    } catch (error) {
-      console.error("Google login error:", error);
-      toast.error("Google Sign-In failed: " + error.message);
-    }
-  };
+  //       toast.success("Signed in successfully!");
+  //       // router.push("/");
+  //       return;
+  //     }
+
+  //     toast.success("Signed in successfully!");
+  //     console.log("Firebase");
+
+  //     // router.push("/");
+  //   } catch (error) {
+  //     console.error("Google login error:", error);
+  //     toast.error("Google Sign-In failed: " + error.message);
+  //   }
+  // };
 
   // ! Sign In using Supabase
   const signInWithGoogle = async () => {
     try {
-      await supabase.auth.signInWithOAuth({
+      const res = await supabase.auth.signInWithOAuth({
         provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`, // or homepage
+        },
       });
+      console.log(res);
     } catch (error) {
       console.log(error);
     }

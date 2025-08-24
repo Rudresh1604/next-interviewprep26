@@ -131,9 +131,9 @@ Key Guidelines:
     };
   }, []);
   const stopInterview = () => {
+    vapi.stop();
     setCallActive(false);
     generateFeedback();
-    vapi.stop();
   };
 
   const generateFeedback = async () => {

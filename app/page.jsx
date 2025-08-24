@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Testimonal from "@/components/HomePage/Testimonal";
 import FeatureSection from "@/components/HomePage/FeatureSection";
 import Footer from "@/components/HomePage/Footer";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -39,13 +40,14 @@ export default function Home() {
         </div>
         <div className="flex flex-row gap-3 mt-9 max-sm:mt-5">
           <Button
+            asChild
             className="w-1/2 h-auto text-white bg-black p-3 hover:bg-gray-800 cursor-pointer hover:text-white"
             variant="outline"
           >
-            Get Started
+            <Link href="/signup">Get Started</Link>
           </Button>
-          <Button className="w-1/2 cursor-pointer h-auto p-3">
-            Already User ?
+          <Button asChild className="w-1/2 cursor-pointer h-auto p-3">
+            <Link href="/signin">Already User ?</Link>
           </Button>
         </div>
         <div>
