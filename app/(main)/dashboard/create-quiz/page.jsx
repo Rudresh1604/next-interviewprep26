@@ -10,8 +10,9 @@ import { toast } from "sonner";
 
 const CreateInterview = () => {
   const router = useRouter();
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState();
+  const [questionLength, setQuestionLength] = useState(0);
   const [quizId, setQuizId] = useState();
   const onGoToNext = () => {
     console.log(formData);
@@ -27,6 +28,7 @@ const CreateInterview = () => {
     console.log("Form Data is ", formData);
     setStep(step + 1);
   };
+  console.log(questionLength);
 
   const onCreateLink = (quiz_id) => {
     setQuizId(quiz_id);
@@ -58,9 +60,14 @@ const CreateInterview = () => {
         <QuizQuestionList
           formData={formData}
           onCreateLink={(quiz_id) => onCreateLink(quiz_id)}
+          setQuestionLength={setQuestionLength}
         />
       ) : step == 3 ? (
-        <QuizLink quizId={quizId} formData={formData} />
+        <QuizLink
+          quizId={quizId}
+          questionLength={questionLength}
+          formData={formData}
+        />
       ) : null}
     </div>
   );

@@ -6,7 +6,7 @@ import { ArrowLeft, Clock, Copy, List, Mail, Plus } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
-const QuizLink = ({ quizId, formData }) => {
+const QuizLink = ({ quizId, formData, questionLength }) => {
   const url = process.env.NEXT_PUBLIC_HOST_URL + "/" + quizId;
   const GetInterviewUrl = () => {
     console.log(url);
@@ -50,7 +50,7 @@ const QuizLink = ({ quizId, formData }) => {
             <Clock className="h-4 w-4" /> {formData?.duration}
           </h2>
           <h2 className="text-sm text-gray-500 flex gap-2 items-center">
-            <List className="h-4 w-4" /> 10 Questions
+            <List className="h-4 w-4" /> {questionLength} Questions
           </h2>
         </div>
       </div>
@@ -80,7 +80,7 @@ const QuizLink = ({ quizId, formData }) => {
         </Link>
         <Link href={"/dashboard/create-interview"}>
           <Button className="cursor-pointer">
-            <Plus /> Create New Interview{" "}
+            <Plus /> Create New Quiz{" "}
           </Button>
         </Link>
       </div>

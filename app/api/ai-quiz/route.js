@@ -21,9 +21,10 @@ Quiz Type: ${type}
 
 Your task:
 1. Analyze the job description to identify key responsibilities, required skills, and expected experience.  
-2. Generate a list of quiz questions proportional to the Quiz Duration.  
-3. Ensure questions cover multiple types (Technical, Behavioral, Aptitude, Problem-Solving, Leadership, etc. as needed).  
-4. Return the questions in the following JSON format:
+2. Generate a list of quiz questions proportional to the Quiz Duration. Do NOT limit to only 1 question per minute — provide an optimal number of questions that balances variety and depth (e.g., 5 minutes ≈ 8–12 questions, 15 minutes ≈ 20+ questions).  
+3. Ensure questions cover multiple types (Technical, Behavioral, Aptitude, Problem-Solving, Leadership, etc. as relevant to the role).  
+4. Do NOT include open-ended user input questions like "Describe a situation when…" or "Explain your approach to…". Every question must be multiple-choice except for Behavioral/Leadership (which may have "options": []).  
+5. Do NOT include long inline code snippets in one line. If code is needed, format it properly across multiple lines inside the "question" field using fenced code blocks .  
 
 quizQuestions = [
   {
@@ -40,26 +41,30 @@ quizQuestions = [
 ]
 
 Guidelines:
-- Always include an \`"id"\`, \`"question"\`, \`"type"\`, and \`"options"\`.  
-- For Technical/Aptitude/Problem-Solving: provide multiple-choice \`"options"\` with exactly one \`"isCorrect": true\`.  
-- For Behavioral/Leadership: provide \`"options": []\` (open-ended).  
+- Always include an "id", "question", "type", and "options".  
+- For Technical/Aptitude/Problem-Solving: provide multiple-choice "options" with exactly one "isCorrect": true.  
+- For Behavioral/Leadership: provide "options": [] (open-ended).  
 - Adjust depth and difficulty based on Quiz Duration.  
 - Ensure the tone and structure match a real-life ${type} quiz.  
+
+The goal is to create a structured, relevant, and time-optimized interview quiz for a ${jobPosition} role.
+
+
 `,
     });
-    // console.log(questions);
+    console.log(questions);
 
-    // console.log(typeof questions);
+    console.log(typeof questions);
 
     const parsedQuestions = JSON.parse(
       questions.replace(/```json|```/g, "").trim()
     );
-    // console.log("Parsed Qs", parsedQuestions);
+    console.log("Parsed Qs", parsedQuestions);
 
     const quiz = {
       quizTitle: jobPosition,
       quizDuration: duration,
-      quizQuestions: parsedQuestions?.quizQuestions,
+      quizQuestions: parsedQuestions,
       createdAt: new Date().toISOString(),
     };
 
