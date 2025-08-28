@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { QuizDataContext } from "@/context/QuizDataContext";
 import React, { useContext, useEffect, useState } from "react";
 import RenderQuizQuestion from "./_components/RenderQuizQuestion";
-import { ArrowLeft, ArrowRight, MoveRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const InterviewStartPage = () => {
   const { quizInfo, setQuizInfo } = useContext(QuizDataContext);
@@ -264,6 +264,9 @@ const InterviewStartPage = () => {
     },
   ]);
   const [qsInd, setQsInd] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [correctAnswered, setCorrectAnsewered] = useState({});
+  const [totalQuestion, setTotalQuestion] = useState({});
   useEffect(() => {
     console.log(quizInfo);
     if (quizInfo?.quizData) {
@@ -271,11 +274,64 @@ const InterviewStartPage = () => {
     }
   }, [quizInfo]);
 
+  const clearAnswer = (qsType, qsInd) => {
+    setCorrectAnsewered((prev) => {
+      const updated = { ...prev };
+
+      if (updated[qsType]) {
+        const newSet = new Set(updated[qsType]);
+        newSet.delete(qsInd); // remove the index if exists
+        updated[qsType] = newSet;
+      }
+
+      return updated;
+    });
+  };
+  const handleNextClick = () => {
+    const qs = questionList[qsInd];
+
+    setTotalQuestion((prev) => {
+      const updated = { ...prev };
+      if (!updated[qs.type]) {
+        updated[qs.type] = new Set();
+      }
+      updated[qs.type].add(qsInd);
+      return updated;
+    });
+
+    setCorrectAnsewered((prev) => {
+      const updated = { ...prev };
+
+      if (!updated[qs.type]) {
+        updated[qs.type] = new Set();
+      }
+
+      if (selectedOption?.isCorrect) {
+        const newSet = new Set(updated[qs.type]);
+        newSet.add(qsInd); // add only if correct
+        updated[qs.type] = newSet;
+      } else {
+        const newSet = new Set(updated[qs.type]);
+        newSet.delete(qsInd); // remove if incorrect
+        updated[qs.type] = newSet;
+      }
+
+      return updated;
+    });
+    setQsInd((prev) => prev + 1);
+  };
+
   return (
     <div className="select-none min-h-screen px-20  mt-16 md:px-28 lg:px-43 xl:px-52 border-gray-200 rouded-xl w-full">
       <h1>Interview Start</h1>
       <div className="w-full">
-        <RenderQuizQuestion question={questionList[qsInd]}></RenderQuizQuestion>
+        <RenderQuizQuestion
+          question={questionList[qsInd]}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          clearAnswer={clearAnswer}
+          qsInd={qsInd}
+        />
       </div>
       <div className="flex justify-between items-center w-full mt-6">
         <Button
@@ -290,11 +346,17 @@ const InterviewStartPage = () => {
           <ArrowLeft />
           Previous
         </Button>
+        {/* <Button
+          onClick={() => {
+            console.log(correctAnswered);
+            console.log(totalQuestion);
+          }}
+        >
+          Cl
+        </Button> */}
         <Button
           onClick={() => {
-            setQsInd((prev) => {
-              return prev + 1;
-            });
+            handleNextClick();
           }}
           className="cursor-pointer w-1/4"
           disabled={questionList.length - 1 == qsInd}

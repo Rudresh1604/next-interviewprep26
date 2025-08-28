@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 
-const RenderQuizQuestion = ({ question }) => {
+const RenderQuizQuestion = ({
+  question,
+  selectedOption,
+  setSelectedOption,
+  clearAnswer,
+  qsInd,
+}) => {
   console.log("Question", question);
-  const [selectedOption, setSelectedOption] = useState(null);
   const handleSelectedOption = (option) => {
     if (selectedOption == option) {
+      clearAnswer(question?.type, qsInd);
       setSelectedOption(null);
     } else {
       setSelectedOption(option);
@@ -12,7 +18,7 @@ const RenderQuizQuestion = ({ question }) => {
   };
 
   return (
-    <div className="border border-gray-200 shadow-2xl p-5 md:p-2 text-gray-700 rounded-2xl w-full my-5">
+    <div className="border bg-white border-gray-200 shadow-2xl p-5 md:p-2 text-gray-700 rounded-2xl w-full my-5">
       <h1 className="text-3xl font-medium mx-2 mt-4">
         {"Q." + question?.id + "   " + question?.question}
       </h1>
@@ -21,7 +27,7 @@ const RenderQuizQuestion = ({ question }) => {
         {question?.options?.map((option, index) => (
           <div
             key={index}
-            className={`w-full border rounded-2xl p-4 my-2 flex flex-row items-center gap-4 cursor-pointer transition 
+            className={`w-full border shadow-xl rounded-2xl p-4 my-2 flex flex-row items-center bg-gray-50 gap-4 cursor-pointer transition 
   ${
     option === selectedOption
       ? "bg-green-100 border-green-400 shadow-sm hover:bg-green-200"
