@@ -2,7 +2,7 @@
 import InterviewHeader from "@/components/interview/InterviewHeader";
 import { QuizDataContext } from "@/context/QuizDataContext";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function QuizLayout({ children }) {
   const [quizInfo, setQuizInfo] = useState();

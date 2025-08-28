@@ -29,13 +29,13 @@ const QuizPage = () => {
         .select("jobPosition,jobDescription,duration,type")
         .eq("quiz_id", quiz_id);
 
-      console.log(Quizs);
+      console.log(Quizs[0]);
+      setQuizData(Quizs[0]);
 
-      // setInterviewData(Quizs[0]);
-      // if (Interviews.length == 0) {
-      //   router.push("/");
-      //   toast("Incorrect Interview Link !");
-      // }
+      if (Quizs.length == 0) {
+        router.push("/");
+        toast("Incorrect Interview Link !");
+      }
       setLoading(false);
     } catch (error) {
       toast("Incorrect Interview Link !");
@@ -47,27 +47,29 @@ const QuizPage = () => {
     }
   };
 
-  // const onJoinInterview = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const { data: Interviews, error } = await supabase
-  //       .from("Interviews")
-  //       .select("*")
-  //       .eq("interview_id", interview_id);
-  //     console.log(Interviews[0]);
-  //     setInterviewInfo({
-  //       userName: userName,
-  //       userEmail: userEmail,
-  //       interviewData: Interviews[0],
-  //     });
-  //     setLoading(false);
-  //     router.push(`/interview/${interview_id}/start`);
-  //   } catch (error) {
-  //     toast("Invalid Interview Link !");
-  //     console.log(error);
-  //     setLoading(false);
-  //   }
-  // };
+  const onStartQuiz = async () => {
+    try {
+      setLoading(true);
+      const { data: Quizs, error } = await supabase
+        .from("Quizs")
+        .select("*")
+        .eq("quiz_id", quiz_id);
+      console.log(Quizs[0]);
+      setQuizInfo({
+        userName: userName,
+        userEmail: userEmail,
+        quizData: Quizs[0],
+      });
+      console.log(quizInfo);
+
+      setLoading(false);
+      router.push(`/quizs/${quiz_id}/start`);
+    } catch (error) {
+      toast("Invalid Quiz Link !");
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     quiz_id && getQuizDetail();
@@ -88,9 +90,9 @@ const QuizPage = () => {
         <h2 className="font-bold text-lg mt-5 ">{quizData?.jobPosition} </h2>
         <h2 className="flex gap-2 items-center text-gray-500 mt-4">
           {" "}
-          <Clock className="h-4 w-4" /> {quizData?.duration} Minutes{" "}
+          <Clock className="h-4 w-4" /> {quizData?.duration}
         </h2>
-        <div className="lg:w-[60%] w-full ">
+        <div className="lg:w-[60%] w-full my-3">
           <h2>Enter your full name</h2>
           <Input
             className="mt-2"
@@ -98,7 +100,7 @@ const QuizPage = () => {
             onChange={(e) => setUserName(e.target.value)}
           />
         </div>
-        <div className="lg:w-[60%] w-full ">
+        <div className="lg:w-[60%] w-full my-3">
           <h2>Enter your Email:</h2>
           <Input
             className="mt-2"
@@ -126,10 +128,10 @@ const QuizPage = () => {
         <Button
           className="mt-5 lg:w-[60%] w-full  font-bold"
           disabled={loading || !userName || !userEmail}
-          // onClick={() => onJoinInterview()}
+          onClick={() => onStartQuiz()}
         >
-          {loading ? <Loader2Icon className="animate-spin" /> : <Video />} Join
-          Interview
+          {loading ? <Loader2Icon className="animate-spin" /> : <Video />}
+          Start Quiz
         </Button>
       </div>
     </div>
