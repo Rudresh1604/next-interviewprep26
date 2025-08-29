@@ -3,8 +3,21 @@ import { Button } from "@/components/ui/button";
 import { QuizDataContext } from "@/context/QuizDataContext";
 import React, { useContext, useEffect, useState } from "react";
 import RenderQuizQuestion from "./_components/RenderQuizQuestion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-
+import { ArrowLeft, ArrowRight, Clock, Clock2Icon, Timer } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import axios from "axios";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 const InterviewStartPage = () => {
   const { quizInfo, setQuizInfo } = useContext(QuizDataContext);
   const [questionList, setQuestionList] = useState([
@@ -265,14 +278,38 @@ const InterviewStartPage = () => {
   ]);
   const [qsInd, setQsInd] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [candidateEmail, setCandidateEmail] = useState(null);
+  const [candidateName, setCandidateName] = useState(null);
+  const [duration, setDuration] = useState(null);
   const [correctAnswered, setCorrectAnsewered] = useState({});
   const [totalQuestion, setTotalQuestion] = useState({});
+
+  const router = useRouter();
   useEffect(() => {
     console.log(quizInfo);
     if (quizInfo?.quizData) {
+      setCandidateEmail(quizInfo?.userEmail);
+      setCandidateName(quizInfo?.userName);
       setQuestionList(quizInfo?.quizData?.questionList);
+      // console.log(quizInfo?.quizData?.duration);
+      setDuration(quizInfo?.quizData?.duration * 60);
+      setTimeLeft(quizInfo?.quizData?.duration * 60);
     }
   }, [quizInfo]);
+
+  useEffect(() => {
+    if (!timeLeft) return;
+    if (timeLeft <= 0) {
+      submitQuiz();
+      return;
+    }
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
 
   const clearAnswer = (qsType, qsInd) => {
     setCorrectAnsewered((prev) => {
@@ -287,6 +324,7 @@ const InterviewStartPage = () => {
       return updated;
     });
   };
+
   const handleNextClick = () => {
     const qs = questionList[qsInd];
 
@@ -321,9 +359,111 @@ const InterviewStartPage = () => {
     setQsInd((prev) => prev + 1);
   };
 
+  const displayTime = () => {
+    let Min = Math.floor(timeLeft / 60);
+    let Sec = timeLeft % 60;
+
+    return { minutes: Min, seconds: Sec };
+  };
+
+  const submitQuiz = async () => {
+    if (!candidateEmail || !candidateName) {
+      toast("There was problem with the test. Please re attempt !");
+      router.back();
+    }
+
+    try {
+      let attemptedDuration = duration - timeLeft;
+      console.log(attemptedDuration);
+
+      let report = new Object();
+      console.log(correctAnswered);
+
+      Object.entries(totalQuestion).forEach(([key, set]) => {
+        let total = set.size;
+        let score = Math.floor((correctAnswered[key]?.size / total) * 100);
+        console.log(score);
+        report[key] = score;
+      });
+      console.log(report);
+      const result = await axios.post("/api/quiz/submit", {
+        timeTaken: attemptedDuration,
+        result: report,
+        candidateEmail: candidateEmail,
+        candidateName: candidateName,
+        quiz_id: quizInfo?.quiz_id,
+      });
+
+      if (result.data.success) {
+        router.push(`/quizs/${quizInfo?.quiz_id}/completed`);
+      } else {
+        toast("Unable to submit the progress !");
+        router.back();
+      }
+      console.log(totalQuestion);
+    } catch (error) {
+      console.log(error);
+      toast(error.message);
+      router.back();
+    }
+  };
+
   return (
-    <div className="select-none min-h-screen px-20  mt-16 md:px-28 lg:px-43 xl:px-52 border-gray-200 rouded-xl w-full">
-      <h1>Interview Start</h1>
+    <div className="select-none flex flex-col min-h-screen px-20  mt-16 md:px-28 lg:px-43 xl:px-52 border-gray-200 rouded-xl w-full">
+      <div className="bg-white shadow-xl border flex flex-col items-center lg:flex-row lg:items-center lg:justify-between rounded-2xl p-4 lg:px-6 gap-6 lg:gap-2">
+        <div>
+          <h1 className="text-2xl font-extrabold text-indigo-700">
+            Your Quiz is Now Live
+          </h1>
+          <p className="text-gray-500 text-sm">
+            Answer all questions carefully. Your progress will be auto-saved.
+          </p>
+          <p className="text-gray-500 text-sm">Timer is ticking ⏳</p>
+        </div>
+
+        <div className="flex items-center text-xl font-bold">
+          <span className="border px-3 py-2 flex flex-row rounded-l-2xl text-indigo-700">
+            <Timer className="animate-bounce mx-2" />
+            Time Remaining:
+          </span>
+          <h1 className="border px-3 py-2">{displayTime().minutes} m</h1>
+          <h1 className="border border-gray-300 bg-white px-3 py-2 rounded-r-2xl animate-pulse">
+            {displayTime().seconds} s
+          </h1>
+        </div>
+
+        <AlertDialog>
+          <AlertDialogTrigger className="w-full lg:w-1/6 bg-green-600 cursor-pointer px-2 py-2 text-white rounded-lg hover:bg-green-500">
+            Submit Quiz
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure to submit the quiz?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. Once you submit you cannot re
+                attempt the quiz and your current will be your final progress.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="text-red-600 cursor-pointer hover:text-red-500 border border-red-700">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <button
+                  className="bg-green-600 cursor-pointer text-white rounded-lg hover:bg-green-500"
+                  onClick={submitQuiz}
+                >
+                  Submit
+                </button>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+
       <div className="w-full">
         <RenderQuizQuestion
           question={questionList[qsInd]}

@@ -7,7 +7,7 @@ const RenderQuizQuestion = ({
   clearAnswer,
   qsInd,
 }) => {
-  console.log("Question", question);
+  // console.log("Question", question);
   const handleSelectedOption = (option) => {
     if (selectedOption == option) {
       clearAnswer(question?.type, qsInd);
