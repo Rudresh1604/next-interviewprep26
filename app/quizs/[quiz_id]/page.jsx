@@ -90,7 +90,7 @@ const QuizPage = () => {
         <h2 className="font-bold text-lg mt-5 ">{quizData?.jobPosition} </h2>
         <h2 className="flex gap-2 items-center text-gray-500 mt-4">
           {" "}
-          <Clock className="h-4 w-4" /> {quizData?.duration}
+          <Clock className="h-4 w-4" /> {quizData?.duration} Minutes
         </h2>
         <div className="lg:w-[60%] w-full my-3">
           <h2>Enter your full name</h2>

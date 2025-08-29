@@ -6,7 +6,7 @@ import Image from "next/image";
 import Lottie from "lottie-react";
 import interviewAnimation from "../../../../lib/constants/interviewComplete.json";
 
-const InterviewComplete = () => {
+const QuizComplete = () => {
   return (
     <div className="bg-midnight text-white font-sans antialiased flex flex-col min-h-screen">
       {/* Main Content */}
@@ -33,12 +33,12 @@ const InterviewComplete = () => {
 
         {/* Heading */}
 
-        <h1 className="text-4xl font-bold text-center">Interview Complete!</h1>
+        <h1 className="text-4xl font-bold text-center">Quiz Complete!</h1>
 
         {/* Subheading */}
 
         <p className="text-lg text-gray-300 text-center">
-          Thank you for participating in the AI-driven interview with Alcruiter
+          Thank you for participating in the AI-driven Quiz with Alcruiter
         </p>
 
         {/* Image */}
@@ -70,8 +70,8 @@ const InterviewComplete = () => {
           <h2 className="text-2xl font-semibold text-center">What's Next?</h2>
 
           <p className="text-gray-300 text-center">
-            The recruiter will review your interview responses and will contact
-            you soon regarding the next steps.
+            The recruiter will review your Quiz responses and will contact you
+            soon regarding the next steps.
           </p>
 
           <p className="text-gray-400 text-sm text-center">
@@ -119,4 +119,4 @@ const InterviewComplete = () => {
   );
 };
 
-export default InterviewComplete;
+export default QuizComplete;

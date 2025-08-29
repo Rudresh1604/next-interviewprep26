@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import axios from "axios";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { supabase } from "@/services/supabaseClient";
 const InterviewStartPage = () => {
   const { quizInfo, setQuizInfo } = useContext(QuizDataContext);
   const [questionList, setQuestionList] = useState([
@@ -276,6 +277,7 @@ const InterviewStartPage = () => {
       ],
     },
   ]);
+  const { quiz_id } = useParams();
   const [qsInd, setQsInd] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
@@ -386,20 +388,21 @@ const InterviewStartPage = () => {
         report[key] = score;
       });
       console.log(report);
-      const result = await axios.post("/api/quiz/submit", {
-        timeTaken: attemptedDuration,
-        result: report,
-        candidateEmail: candidateEmail,
-        candidateName: candidateName,
-        quiz_id: quizInfo?.quiz_id,
-      });
+      const { data, error } = await supabase
+        .from("QuizResult")
+        .insert([
+          {
+            quiz_id: quiz_id,
+            timeTaken: attemptedDuration,
+            report: report,
+            candidateEmail: candidateEmail,
+            candidateName: candidateName,
+          },
+        ])
+        .select();
 
-      if (result.data.success) {
-        router.push(`/quizs/${quizInfo?.quiz_id}/completed`);
-      } else {
-        toast("Unable to submit the progress !");
-        router.back();
-      }
+      router.push(`/quizs/${quiz_id}/completed`);
+
       console.log(totalQuestion);
     } catch (error) {
       console.log(error);
