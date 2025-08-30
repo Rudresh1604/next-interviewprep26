@@ -285,7 +285,6 @@ const InterviewStartPage = () => {
   const [candidateName, setCandidateName] = useState(null);
   const [duration, setDuration] = useState(null);
   const [correctAnswered, setCorrectAnsewered] = useState({});
-  const [totalQuestion, setTotalQuestion] = useState({});
 
   const router = useRouter();
   useEffect(() => {
@@ -301,9 +300,11 @@ const InterviewStartPage = () => {
   }, [quizInfo]);
 
   useEffect(() => {
-    if (!timeLeft) return;
+    if (timeLeft == null) return;
     if (timeLeft <= 0) {
-      submitQuiz();
+      toast("Quiz was auto submitted ! ");
+
+      // submitQuiz();
       return;
     }
     const timer = setInterval(() => {
@@ -329,15 +330,6 @@ const InterviewStartPage = () => {
 
   const handleNextClick = () => {
     const qs = questionList[qsInd];
-
-    setTotalQuestion((prev) => {
-      const updated = { ...prev };
-      if (!updated[qs.type]) {
-        updated[qs.type] = new Set();
-      }
-      updated[qs.type].add(qsInd);
-      return updated;
-    });
 
     setCorrectAnsewered((prev) => {
       const updated = { ...prev };
@@ -371,20 +363,30 @@ const InterviewStartPage = () => {
   const submitQuiz = async () => {
     if (!candidateEmail || !candidateName) {
       toast("There was problem with the test. Please re attempt !");
-      router.back();
+      router.push(`/quizs/${quiz_id}/`);
+      return;
     }
 
     try {
       let attemptedDuration = duration - timeLeft;
-      console.log(attemptedDuration);
+
+      let totalQuestion = Object();
+      questionList?.forEach((q) => {
+        if (!totalQuestion[q?.type]) {
+          totalQuestion[q?.type] = new Set();
+        }
+        totalQuestion[q?.type].add(q?.id);
+        console.log(q);
+      });
 
       let report = new Object();
-      console.log(correctAnswered);
 
       Object.entries(totalQuestion).forEach(([key, set]) => {
         let total = set.size;
-        let score = Math.floor((correctAnswered[key]?.size / total) * 100);
-        console.log(score);
+        let curscore = correctAnswered[key]?.size
+          ? correctAnswered[key]?.size
+          : 0;
+        let score = Math.floor((curscore / total) * 100);
         report[key] = score;
       });
       console.log(report);
@@ -401,13 +403,17 @@ const InterviewStartPage = () => {
         ])
         .select();
 
+      if (error) {
+        throw error;
+      }
+
       router.push(`/quizs/${quiz_id}/completed`);
 
       console.log(totalQuestion);
     } catch (error) {
       console.log(error);
       toast(error.message);
-      router.back();
+      router.push(`/quizs/${quiz_id}/`);
     }
   };
 
@@ -476,7 +482,7 @@ const InterviewStartPage = () => {
           qsInd={qsInd}
         />
       </div>
-      <div className="flex justify-between items-center w-full mt-6">
+      <div className="flex justify-between items-center w-full my-6">
         <Button
           onClick={() => {
             setQsInd((prev) => {
@@ -489,14 +495,7 @@ const InterviewStartPage = () => {
           <ArrowLeft />
           Previous
         </Button>
-        {/* <Button
-          onClick={() => {
-            console.log(correctAnswered);
-            console.log(totalQuestion);
-          }}
-        >
-          Cl
-        </Button> */}
+
         <Button
           onClick={() => {
             handleNextClick();

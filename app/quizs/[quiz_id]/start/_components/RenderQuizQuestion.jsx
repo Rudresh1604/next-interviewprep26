@@ -18,7 +18,7 @@ const RenderQuizQuestion = ({
   };
 
   return (
-    <div className="border bg-white border-gray-200 shadow-2xl p-5 md:p-2 text-gray-700 rounded-2xl w-full my-5">
+    <div className="border border-gray-200 shadow-2xl p-5 md:p-2 text-gray-700 rounded-2xl w-full my-5 bg-white">
       <h1 className="text-3xl font-medium mx-2 mt-4">
         {"Q." + question?.id + "   " + question?.question}
       </h1>
@@ -27,7 +27,7 @@ const RenderQuizQuestion = ({
         {question?.options?.map((option, index) => (
           <div
             key={index}
-            className={`w-full border shadow-xl rounded-2xl p-4 my-2 flex flex-row items-center bg-gray-50 gap-4 cursor-pointer transition 
+            className={`w-full border shadow-xl rounded-2xl p-4 my-2 flex flex-row items-center bg-gray-50 gap-4 hover:bg-gray-100 cursor-pointer transition 
   ${
     option === selectedOption
       ? "bg-green-100 border-green-400 shadow-sm hover:bg-green-200"
