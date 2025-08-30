@@ -1,5 +1,6 @@
 "use client";
 import { useUser } from "@/app/provider";
+import CandidateList from "@/components/create-quiz/CandidateList";
 import QuestionListContainer from "@/components/create-quiz/QuestionListContainer";
 import JobDetailsContainer from "@/components/JobDetailsContainer";
 import { supabase } from "@/services/supabaseClient";
@@ -17,7 +18,7 @@ const page = () => {
       const { data, error } = await supabase
         .from("Quizs")
         .select(
-          "jobPosition,jobDescription,type,duration,questionList,created_at,quiz_id"
+          "jobPosition,jobDescription,type,duration,questionList,created_at,quiz_id,QuizResult(*)"
         )
         .eq("userEmail", user?.email)
         .eq("quiz_id", quiz_id)
@@ -46,6 +47,11 @@ const page = () => {
           />
         </div>
       </div>
+      {quizDetails?.QuizResult ? (
+        <CandidateList candidateList={quizDetails?.QuizResult} />
+      ) : (
+        <h1>Loading </h1>
+      )}
     </div>
   );
 };
