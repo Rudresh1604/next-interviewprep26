@@ -1,7 +1,6 @@
 "use client";
 import { useUser } from "@/app/provider";
 import QuizCard from "@/components/create-quiz/QuizCard";
-import InterviewCard from "@/components/InterviewCard";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/services/supabaseClient";
 import { Video } from "lucide-react";
