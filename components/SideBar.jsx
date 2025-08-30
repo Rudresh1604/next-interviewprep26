@@ -22,14 +22,16 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="flex items-center mt-5">
-        <div className="flex justify-center w-[150px] gap-3 items-center">
-          <Image src="/logo.svg" alt="MockMate Logo" width={38} height={32} />
-          <h2 className="text-primary-100 font-semibold text-gray-900 text-2xl mb-2">
-            PrepWise
-          </h2>
-        </div>
+        <Image
+          src="/logo1.png"
+          className="w-[75%] h-16"
+          alt="MockMate Logo"
+          width={90}
+          height={90}
+        />
+
         <Button
-          className="w-full cursor-pointer"
+          className="w-full mt-3 lg:mt-5 cursor-pointer"
           onClick={() => {
             router.push("/dashboard/create-interview");
           }}
