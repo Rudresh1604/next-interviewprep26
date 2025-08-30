@@ -9,6 +9,7 @@ import {
   Settings,
   User2Icon,
   WalletCards,
+  ClipboardList,
 } from "lucide-react";
 
 export const SideBarOptions = [
@@ -26,6 +27,11 @@ export const SideBarOptions = [
     name: "All Interview",
     icon: List,
     path: "/all-interview",
+  },
+  {
+    name: "Quizs",
+    icon: ClipboardList,
+    path: "/my-quizs",
   },
   {
     name: "Billing",

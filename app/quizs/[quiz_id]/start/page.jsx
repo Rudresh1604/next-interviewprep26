@@ -304,7 +304,7 @@ const InterviewStartPage = () => {
     if (timeLeft <= 0) {
       toast("Quiz was auto submitted ! ");
 
-      // submitQuiz();
+      submitQuiz();
       return;
     }
     const timer = setInterval(() => {
