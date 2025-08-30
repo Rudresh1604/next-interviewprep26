@@ -27,7 +27,10 @@ const QuizReportDialog = ({ candidate }) => {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" className="text-primary">
+          <Button
+            variant="outline"
+            className="text-primary cursor-pointer hover:text-blue-600"
+          >
             View Report
           </Button>
         </DialogTrigger>

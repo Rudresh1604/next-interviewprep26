@@ -8,23 +8,23 @@ const JobDetailsContainer = ({ job }) => {
   return (
     <div className="border-b-2 pb-4 lg:pb-8 border-gray-300">
       <h2 className="font-bold text-2xl">{job?.jobPosition} </h2>
-      <div className="mt-4 flex items-center justify-between">
+      <div className="mt-4 flex max-sm:flex-col flex-row md:items-center max-sm:gap-4 justify-between">
         <div>
           <h2 className="text-gray-500 text-sm">Duration :</h2>
-          <h2 className="flex text-sm font-bold gap-2 items-center">
+          <h2 className="flex mt-1 text-sm font-bold gap-2 items-center">
             <Clock className="h-4 w-4" /> {job?.duration} Minutes
           </h2>
         </div>
         <div>
           <h2 className="text-gray-500 text-sm">Created On :</h2>
-          <h2 className="flex text-sm font-bold gap-2 items-center">
+          <h2 className="flex mt-1 text-sm font-bold gap-2 items-center">
             <Calendar className="h-4 w-4" />{" "}
             {moment(job?.created_at).format("MMM DD, yyy")}
           </h2>
         </div>
         <div>
           <h2 className="text-gray-500 text-sm">Type :</h2>
-          <h2 className="flex text-sm font-bold gap-2 items-center">
+          <h2 className="flex mt-1 text-sm font-bold gap-2 items-center">
             <Tag className="h-4 w-4" /> {JSON.parse(job?.type)?.join(" + ")}
           </h2>
         </div>

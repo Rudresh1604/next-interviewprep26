@@ -11,7 +11,7 @@ const QuestionListContainer = ({
       {questionList?.map((item, index) => (
         <div
           key={index}
-          className="p-3 border rounded-xl bg-gray-50 mb-3 border-gray-200"
+          className="p-3 border rounded-xl bg-gray-50 mb-3 border-gray-200 shadow-md"
         >
           <div className="flex items-center justify-between w-full">
             <h2 className="font-bold">{item.question} </h2>
