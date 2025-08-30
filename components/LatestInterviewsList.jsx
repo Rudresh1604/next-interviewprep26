@@ -42,7 +42,7 @@ const LatestInterviewsList = () => {
         )}
       </div>
       {interviewList?.length > 0 && (
-        <div className="grid grid-cols-2 mt-5 w-full xl:grid-cols-3 gap-5">
+        <div className="grid max-sm:grid-cols-1 grid-cols-2 mt-5 w-full xl:grid-cols-3 gap-5">
           {interviewList?.map((interview, index) => (
             <InterviewCard interview={interview} key={index} />
           ))}

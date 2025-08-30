@@ -6,7 +6,7 @@ import React from "react";
 const CreateOptions = () => {
   const router = useRouter();
   return (
-    <div className="grid grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="bg-white border border-gray-200  rounded-lg p-5">
         <VideoIcon
           onClick={() => {
