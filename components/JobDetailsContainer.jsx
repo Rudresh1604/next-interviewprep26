@@ -6,13 +6,13 @@ const JobDetailsContainer = ({ job }) => {
   console.log(job);
 
   return (
-    <div>
+    <div className="border-b-2 pb-4 lg:pb-8 border-gray-300">
       <h2 className="font-bold text-2xl">{job?.jobPosition} </h2>
       <div className="mt-4 flex items-center justify-between">
         <div>
           <h2 className="text-gray-500 text-sm">Duration :</h2>
           <h2 className="flex text-sm font-bold gap-2 items-center">
-            <Clock className="h-4 w-4" /> {job?.duration}
+            <Clock className="h-4 w-4" /> {job?.duration} Minutes
           </h2>
         </div>
         <div>

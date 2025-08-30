@@ -5,7 +5,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="bg-secondary">
       <DashBoardProvider>
-        <div className="p-10">{children}</div>
+        <div className="p-4 lg:p-10">{children}</div>
       </DashBoardProvider>
     </div>
   );

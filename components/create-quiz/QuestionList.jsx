@@ -83,10 +83,12 @@ const QuizQuestionList = ({ formData, onCreateLink, setQuestionLength }) => {
         </h2>
 
         {questionList?.length > 0 && (
-          <QuestionListContainer
-            questionList={questionList}
-            handleQuestionDelete={handleQuestionDelete}
-          />
+          <div className="border border-gray-300 rounded-xl p-5 bg-white">
+            <QuestionListContainer
+              questionList={questionList}
+              handleQuestionDelete={handleQuestionDelete}
+            />
+          </div>
         )}
       </div>
       <div className="flex justify-end mt-10 ">

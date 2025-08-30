@@ -1,9 +1,10 @@
 "use client";
 import { useUser } from "@/app/provider";
+import QuestionListContainer from "@/components/create-quiz/QuestionListContainer";
 import JobDetailsContainer from "@/components/JobDetailsContainer";
 import { supabase } from "@/services/supabaseClient";
 import { useParams } from "next/navigation";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
   const { quiz_id } = useParams();
@@ -34,10 +35,17 @@ const page = () => {
     quiz_id && getQuizDetails();
   }, [user]);
   return (
-    <div className="p-5 bg-white rounded-lg mt-5">
-      <h1>Scheduled Quizs Details Page</h1>
-
-      {quizDetails && <JobDetailsContainer job={quizDetails} />}
+    <div className="mt-5">
+      <h1 className="text-2xl font-bold">Scheduled Quizs Details Page</h1>
+      <div className="p-5 bg-white rounded-lg mt-5">
+        {quizDetails && <JobDetailsContainer job={quizDetails} />}
+        <div className="mt-5 lg:mt-9 ">
+          <QuestionListContainer
+            questionList={quizDetails?.questionList}
+            isEdit={false}
+          />
+        </div>
+      </div>
     </div>
   );
 };
