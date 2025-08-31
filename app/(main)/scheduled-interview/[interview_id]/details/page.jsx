@@ -3,8 +3,8 @@ import { useUser } from "@/app/provider";
 import { supabase } from "@/services/supabaseClient";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import InterviewDetailsContainer from "./_component/InterviewDetailsContainer";
-import CandidateList from "./_component/CandidateList";
+import InterviewDetailsContainer from "../../../../../components/interview/scheduled/InterviewDetailsContainer";
+import CandidateList from "../../../../../components/interview/scheduled/CandidateList";
 
 const page = () => {
   const { interview_id } = useParams();

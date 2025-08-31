@@ -1,4 +1,4 @@
-import CandidateFeedbackDialog from "@/app/(main)/scheduled-interview/[interview_id]/details/_component/CandidateFeedbackDialog";
+import CandidateFeedbackDialog from "@/components/interview/scheduled/CandidateFeedbackDialog";
 import moment from "moment";
 import React from "react";
 import QuizReportDialog from "./QuizReportDialog";
