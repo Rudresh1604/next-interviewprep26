@@ -12,7 +12,7 @@ import {
 
 const Testimonal = () => {
   return (
-    <div className="mt-12  p-3  rounded-lg">
+    <div className="p-3 py-12 bg-gray-200 rounded-lg">
       <div className="text-center">
         <h2 className="text-3xl lg:text-5xl mb-2 font-medium text-blue-600 animate-bounce">
           What people are saying

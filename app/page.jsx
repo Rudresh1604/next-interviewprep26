@@ -7,11 +7,14 @@ import Testimonal from "@/components/HomePage/Testimonal";
 import FeatureSection from "@/components/HomePage/FeatureSection";
 import Footer from "@/components/HomePage/Footer";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <div className="bg-gray-200">
-      <div className="py-8 px-7 md:pt-12 md:px-10 bg-white flex flex-col">
+    <div className="">
+      <Navbar />
+
+      <div className="py-8 mt-16 px-7 lg:mt-6 md:pt-12 md:px-10 bg-white flex flex-col">
         <div className="flex flex-col justify-between items-center md:flex-row">
           <div className="flex flex-col gap-3 max-sm:items-center">
             <h1 className="text-4xl max-sm:text-2xl text-primary md:text-5xl font-extrabold">

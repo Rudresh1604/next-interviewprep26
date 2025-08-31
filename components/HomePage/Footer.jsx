@@ -15,7 +15,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div className="w-full bg-gray-800  py-5 px-6 text-white lg:text-xl mt-9">
+    <div className="w-full bg-gray-800  py-5 px-6 text-white lg:text-xl pt-9">
       <div className="w-full text-center my-2">
         <h1 className="text-2xl mb-3 md:text-4xl font-bold text-yellow-300">
           AI Mock Recruiter
