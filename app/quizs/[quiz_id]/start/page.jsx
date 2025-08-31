@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { QuizDataContext } from "@/context/QuizDataContext";
 import React, { useContext, useEffect, useState } from "react";
-import RenderQuizQuestion from "./_components/RenderQuizQuestion";
+import RenderQuizQuestion from "../../../../components/Quiz/start/RenderQuizQuestion";
 import { ArrowLeft, ArrowRight, Clock, Clock2Icon, Timer } from "lucide-react";
 import {
   AlertDialog,
