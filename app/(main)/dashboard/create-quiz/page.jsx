@@ -1,7 +1,7 @@
 "use client";
 import QuizQuestionList from "@/components/Quiz/create-quiz/QuestionList";
 import QuizFormContainer from "@/components/Quiz/create-quiz/QuizFormContainer";
-import QuizLink from "@/components/Quiz/create-quiz/QuizLink";
+import ShareLink from "@/components/ShareLink";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -63,8 +63,9 @@ const CreateInterview = () => {
           setQuestionLength={setQuestionLength}
         />
       ) : step == 3 ? (
-        <QuizLink
+        <ShareLink
           quizId={quizId}
+          isQuiz={true}
           questionLength={questionLength}
           formData={formData}
         />

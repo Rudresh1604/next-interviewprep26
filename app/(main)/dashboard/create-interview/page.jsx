@@ -1,5 +1,4 @@
 "use client";
-import InterviewLink from "@/components/interview/create/InterviewLink";
 import QuestionList from "@/components/interview/create/QuestionList";
 import FormContainer from "@/components/interview/create/FormContainer";
 import { Progress } from "@/components/ui/progress";
@@ -7,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import ShareLink from "@/components/ShareLink";
 
 const CreateInterview = () => {
   const router = useRouter();
@@ -59,7 +59,11 @@ const CreateInterview = () => {
           onCreateLink={(interview_id) => onCreateLink(interview_id)}
         />
       ) : step == 3 ? (
-        <InterviewLink interviewId={interviewId} formData={formData} />
+        <ShareLink
+          interviewId={interviewId}
+          formData={formData}
+          isQuiz={false}
+        />
       ) : null}
     </div>
   );
