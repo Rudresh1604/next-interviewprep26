@@ -1,17 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "../ui/textarea";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 import { InterviewType } from "@/services/Constants";
-import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const FormContainer = ({ onHandleInputChange, goToNext }) => {
   const [interviewType, setInterviewType] = useState([]);

@@ -4,10 +4,10 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { Loader2, Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
 import QuestionListContainer from "./QuestionListContainer";
 import { supabase } from "@/services/supabaseClient";
 import { useUser } from "@/app/provider";
+import { Button } from "@/components/ui/button";
 
 const QuestionList = ({ formData, onCreateLink }) => {
   const [loading, setLoading] = useState(true);
@@ -19,10 +19,10 @@ const QuestionList = ({ formData, onCreateLink }) => {
     console.log(loading);
 
     try {
-      // const result = await axios.post("/api/ai-model", { ...formData });
-      // console.log(result.data);
-      // console.log(result.data.data.interviewQuestions);
-      // setQuestionList(result?.data?.data?.interviewQuestions);
+      const result = await axios.post("/api/ai-model", { ...formData });
+      console.log(result.data);
+      console.log(result.data.data.interviewQuestions);
+      setQuestionList(result?.data?.data?.interviewQuestions);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -77,12 +77,14 @@ const QuestionList = ({ formData, onCreateLink }) => {
           <QuestionListContainer questionList={questionList} />
         )}
       </div>
-      <div className="flex justify-end mt-10">
-        <Button onClick={() => onFinish()} disabled={saveLoading}>
-          {saveLoading && <Loader2 className="animate-spin" />}
-          Create Interview Link & Finish
-        </Button>
-      </div>
+      {questionList?.length > 0 && (
+        <div className="flex justify-end mt-10">
+          <Button onClick={() => onFinish()} disabled={saveLoading}>
+            {saveLoading && <Loader2 className="animate-spin" />}
+            Create Interview Link & Finish
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

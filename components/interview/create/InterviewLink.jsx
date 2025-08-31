@@ -1,12 +1,12 @@
 import Image from "next/image";
 import React from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
 import { ArrowLeft, Clock, Copy, List, Mail, Plus } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
-const InterviewLink = ({ interviewId, formData }) => {
+const InterviewLink = ({ interviewId, formData, isQuiz, quizId }) => {
   const url = process.env.NEXT_PUBLIC_HOST_URL + "/" + interviewId;
   const GetInterviewUrl = () => {
     console.log(url);
@@ -45,7 +45,7 @@ const InterviewLink = ({ interviewId, formData }) => {
         <hr className="my-7" />
         <div className="flex items-center gap-5">
           <h2 className="text-sm text-gray-500 flex gap-2 items-center">
-            <Clock className="h-4 w-4" /> {formData?.duration}
+            <Clock className="h-4 w-4" /> {formData?.duration} Minutes
           </h2>
           <h2 className="text-sm text-gray-500 flex gap-2 items-center">
             <List className="h-4 w-4" /> 10 Questions

@@ -1,7 +1,7 @@
 "use client";
-import FormContainer from "@/components/create-interview/FormContainer";
-import InterviewLink from "@/components/create-interview/InterviewLink";
-import QuestionList from "@/components/create-interview/QuestionList";
+import InterviewLink from "@/components/interview/create/InterviewLink";
+import QuestionList from "@/components/interview/create/QuestionList";
+import FormContainer from "@/components/interview/create/FormContainer";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
