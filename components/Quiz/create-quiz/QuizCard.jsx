@@ -5,7 +5,7 @@ import React from "react";
 import { ArrowRight, Copy, Send } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
 const QuizCard = ({ quiz, viewDetail = false }) => {
   const router = useRouter();

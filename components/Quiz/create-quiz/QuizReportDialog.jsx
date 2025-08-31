@@ -8,8 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
-import { Progress } from "../ui/progress";
+} from "../../ui/dialog";
+import { Progress } from "../../ui/progress";
 
 const QuizReportDialog = ({ candidate }) => {
   const getOverallScore = (report) => {

@@ -5,11 +5,12 @@ import { Mic, Phone, Timer } from "lucide-react";
 import Image from "next/image";
 
 import React, { useContext, useEffect, useState } from "react";
-import AlertConfirmation from "./_components/AlertConfirmation";
+
 import { toast } from "sonner";
 import axios from "axios";
 import { supabase } from "@/services/supabaseClient";
 import { useParams, useRouter } from "next/navigation";
+import AlertConfirmation from "@/components/interview/start/AlertConfirmation";
 
 const InterviewStart = () => {
   const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext);

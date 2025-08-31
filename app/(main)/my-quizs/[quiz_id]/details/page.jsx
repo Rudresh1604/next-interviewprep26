@@ -1,7 +1,7 @@
 "use client";
 import { useUser } from "@/app/provider";
-import CandidateList from "@/components/create-quiz/CandidateList";
-import QuestionListContainer from "@/components/create-quiz/QuestionListContainer";
+import CandidateList from "@/components/Quiz/create-quiz/CandidateList";
+import QuestionListContainer from "@/components/Quiz/create-quiz/QuestionListContainer";
 import JobDetailsContainer from "@/components/JobDetailsContainer";
 import { supabase } from "@/services/supabaseClient";
 import { Loader } from "lucide-react";

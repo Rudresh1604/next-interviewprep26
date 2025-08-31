@@ -1,7 +1,7 @@
 "use client";
-import QuizQuestionList from "@/components/create-quiz/QuestionList";
-import QuizFormContainer from "@/components/create-quiz/QuizFormContainer";
-import QuizLink from "@/components/create-quiz/QuizLink";
+import QuizQuestionList from "@/components/Quiz/create-quiz/QuestionList";
+import QuizFormContainer from "@/components/Quiz/create-quiz/QuizFormContainer";
+import QuizLink from "@/components/Quiz/create-quiz/QuizLink";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";

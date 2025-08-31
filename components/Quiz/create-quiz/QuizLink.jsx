@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import { ArrowLeft, Clock, Copy, List, Mail, Plus } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";

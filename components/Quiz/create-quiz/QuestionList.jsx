@@ -4,7 +4,7 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { Loader2, Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import QuestionListContainer from "./QuestionListContainer";
 import { supabase } from "@/services/supabaseClient";
 import { useUser } from "@/app/provider";
