@@ -1,56 +1,73 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import {
   StreamVideoClient,
   StreamVideo,
   StreamCall,
 } from "@stream-io/video-react-sdk";
-import MeetingComponent from "@/components/meetings/RenderComponent";
 import { useParams } from "next/navigation";
+import CandidateMeetingUI from "@/components/meetings/candidate/CandidateUI";
 
 export default function CandidateMeeting() {
-  const [client, setClient] = useState();
-  const [call, setCall] = useState();
+  const [client, setClient] = useState(null);
+  const [call, setCall] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const params = useParams();
   const roomId = params.roomId;
 
   useEffect(() => {
     const init = async () => {
-      const res = await fetch("/api/stream-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomId }),
-      });
+      try {
+        setLoading(true);
 
-      const { token, apiKey, userId } = await res.json();
+        const res = await fetch("/api/stream-token/candidate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roomId }),
+        });
 
-      console.log("token", token);
-      console.log("apiKey", apiKey);
-      console.log("user", userId);
+        if (!res.ok) {
+          throw new Error(`API error: ${res.status}`);
+        }
 
-      const client = new StreamVideoClient({
-        apiKey,
-        user: { id: userId, name: "Candidate" },
-        token,
-      });
+        const { token, apiKey, userId } = await res.json();
 
-      const call = client.call("default", roomId);
-      await call.join({ create: true });
+        console.log("Candidate joining room:", roomId, "with ID:", userId);
 
-      setClient(client);
-      setCall(call);
+        const client = new StreamVideoClient({
+          apiKey,
+          user: { id: userId, name: "Candidate" }, // Set name as "Candidate"
+          token,
+        });
+
+        const call = client.call("default", roomId);
+        await call.join(); // Candidate joins existing call
+
+        setClient(client);
+        setCall(call);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to initialize call:", err);
+        setError(err.message || "Failed to join the meeting");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    init();
+    if (roomId) {
+      init();
+    }
   }, [roomId]);
 
-  if (!client || !call) return <div>Joining interview...</div>;
+  if (loading) return <div>Joining interview room...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!client || !call) return <div>Initializing video call...</div>;
 
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <MeetingComponent />
+        <CandidateMeetingUI /> {/* Use the candidate-specific UI */}
       </StreamCall>
     </StreamVideo>
   );
