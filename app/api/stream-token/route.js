@@ -24,7 +24,16 @@ const streamClient = new StreamClient(apiKey, apiSecret);
 export async function POST(req) {
   try {
     const { roomId } = await req.json();
+    console.log(roomId);
+
+    if (!roomId) {
+      return NextResponse.json(
+        { error: "Room ID is required" },
+        { status: 400 }
+      );
+    }
     const authHeader = req.headers.get("authorization");
+    let userId, role;
 
     // Interviewer flow
     if (authHeader?.startsWith("Bearer ")) {
@@ -41,36 +50,27 @@ export async function POST(req) {
         );
       }
 
-      // Generate token with time buffer
-      const streamToken = streamClient.generateUserToken({
-        user_id: user.id,
-        iat: Math.floor(Date.now() / 1000) - 60,
-      });
-
-      return NextResponse.json({
-        token: streamToken,
-        apiKey,
-        userId: user.id,
-        role: "interviewer",
-        roomId,
-      });
+      userId = user.id;
+      role = "interviewer";
+    } else {
+      // Candidate flow
+      userId = `guest-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      role = "candidate";
     }
+    console.log(userId);
 
-    // Candidate flow
-    const guestId = `guest-${Date.now()}-${Math.random()
-      .toString(36)
-      .substr(2, 9)}`;
+    // Generate token with time buffer to avoid iat issues
     const streamToken = streamClient.generateUserToken({
-      user_id: guestId,
-      iat: Math.floor(Date.now() / 1000) - 60,
+      user_id: userId,
+      iat: Math.floor(Date.now() / 1000) - 60, // Account for clock drift
     });
 
     return NextResponse.json({
       token: streamToken,
       apiKey,
-      userId: guestId,
-      role: "candidate",
-      roomId,
+      userId,
+      role,
+      roomId, // Return the same roomId to confirm
     });
   } catch (error) {
     console.error("Token generation error:", error);

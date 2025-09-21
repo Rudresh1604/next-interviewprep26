@@ -6,10 +6,14 @@ import {
   StreamVideo,
   StreamCall,
 } from "@stream-io/video-react-sdk";
+import MeetingComponent from "@/components/meetings/RenderComponent";
+import { useParams } from "next/navigation";
 
-export default function CandidateMeeting({ roomId }) {
+export default function CandidateMeeting() {
   const [client, setClient] = useState();
   const [call, setCall] = useState();
+  const params = useParams();
+  const roomId = params.roomId;
 
   useEffect(() => {
     const init = async () => {
@@ -46,7 +50,7 @@ export default function CandidateMeeting({ roomId }) {
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <div>👤 Candidate joined room {roomId}</div>
+        <MeetingComponent />
       </StreamCall>
     </StreamVideo>
   );
