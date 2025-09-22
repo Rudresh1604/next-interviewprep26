@@ -4,6 +4,7 @@ import {
   StreamTheme,
   useCallStateHooks,
   ParticipantView,
+  useCall,
 } from "@stream-io/video-react-sdk";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ import {
   Code,
   Play,
   Download,
+  MonitorUp,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
@@ -69,9 +71,13 @@ const CandidateMeetingUI = () => {
     useCallCallingState,
     useLocalParticipant,
     useRemoteParticipants,
+    useCameraState,
+    useMicrophoneState,
     useParticipantCount,
   } = useCallStateHooks();
-
+  const call = useCall();
+  const { camera, isMute } = useCameraState();
+  const { microphone, optimisticIsMute } = useMicrophoneState();
   const callingState = useCallCallingState();
   const localParticipant = useLocalParticipant();
   const remoteParticipants = useRemoteParticipants();
@@ -80,10 +86,8 @@ const CandidateMeetingUI = () => {
   const [code, setCode] = useState(
     "// Write your solution here\nfunction solution() {\n  // Your code here\n  return result;\n}"
   );
-  const [isMicOn, setIsMicOn] = useState(true);
-  const [isVideoOn, setIsVideoOn] = useState(true);
+
   const [sideBarOpen, setSideBarOpen] = useState(true);
-  const [localVideoKey, setLocalVideoKey] = useState(0);
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
 
   // Get interviewers (participants with "Interviewer" in their name)
@@ -92,23 +96,16 @@ const CandidateMeetingUI = () => {
       participant.name && participant.name.toLowerCase().includes("interviewer")
   );
 
-  // Toggle microphone
-  const toggleMic = () => {
-    setIsMicOn(!isMicOn);
-    console.log("Microphone toggled:", !isMicOn);
+  const toggleMic = async () => {
+    await microphone.toggle();
   };
 
-  // Toggle video
-  const toggleVideo = () => {
-    setIsVideoOn(!isVideoOn);
-    console.log("Video toggled:", !isVideoOn);
+  const handleScreenShare = async () => {
+    await call.screenShare.toggle();
+  };
 
-    setTimeout(
-      () => {
-        setLocalVideoKey((prev) => prev + 1);
-      },
-      isVideoOn ? 100 : 500
-    );
+  const toggleVideo = async () => {
+    await camera.toggle();
   };
 
   // End call
@@ -175,10 +172,7 @@ const CandidateMeetingUI = () => {
 
             {/* Local Video (Candidate) */}
             {localParticipant && (
-              <div
-                key={localVideoKey}
-                className="absolute top-4 right-4 w-64 h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-black"
-              >
+              <div className="absolute top-4 right-4 w-64 h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-black">
                 <ParticipantView participant={localParticipant} />
                 <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-sm">
                   You (Candidate)
@@ -190,24 +184,25 @@ const CandidateMeetingUI = () => {
           {/* Controls */}
           <div className="bg-white border-t py-4 px-6 flex justify-center space-x-4">
             <Button
-              variant={isMicOn ? "default" : "secondary"}
+              variant={!optimisticIsMute ? "default" : "secondary"}
               size="lg"
               className="rounded-full h-12 w-12 p-0"
               onClick={toggleMic}
             >
-              {isMicOn ? (
+              {!optimisticIsMute ? (
                 <Mic className="h-5 w-5" />
               ) : (
                 <MicOff className="h-5 w-5" />
               )}
             </Button>
+
             <Button
-              variant={isVideoOn ? "default" : "secondary"}
+              variant={!isMute ? "default" : "secondary"}
               size="lg"
               className="rounded-full h-12 w-12 p-0"
               onClick={toggleVideo}
             >
-              {isVideoOn ? (
+              {!isMute ? (
                 <Video className="h-5 w-5" />
               ) : (
                 <VideoOff className="h-5 w-5" />
@@ -221,6 +216,19 @@ const CandidateMeetingUI = () => {
             >
               <PhoneOff className="h-5 w-5" />
             </Button>
+            <Button
+              variant={
+                call?.screenShare?.state?.status == "enabled"
+                  ? "default"
+                  : "secondary"
+              }
+              size="lg"
+              className="rounded-full h-12 w-12 p-0"
+              onClick={handleScreenShare}
+            >
+              <MonitorUp className="h-5 w-5" />
+            </Button>
+
             <Button
               variant="outline"
               size="lg"

@@ -4,6 +4,9 @@ import {
   StreamTheme,
   useCallStateHooks,
   ParticipantView,
+  useCall,
+  CallControls,
+  SpeakerLayout,
 } from "@stream-io/video-react-sdk";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,17 +22,22 @@ import {
   PhoneOff,
   PanelLeft,
   PanelLeftClose,
+  MonitorUp,
 } from "lucide-react";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 const InterviewerMeetingUI = () => {
   const {
     useCallCallingState,
     useLocalParticipant,
     useRemoteParticipants,
+    useCameraState,
+    useMicrophoneState,
     useParticipantCount,
   } = useCallStateHooks();
-
+  const call = useCall();
+  const { camera, isMute } = useCameraState();
+  const { microphone, optimisticIsMute } = useMicrophoneState();
   const callingState = useCallCallingState();
   const localParticipant = useLocalParticipant();
   const remoteParticipants = useRemoteParticipants();
@@ -37,10 +45,8 @@ const InterviewerMeetingUI = () => {
   const [showOption, setShowOption] = useState("Participant");
   const [note, setNote] = useState("");
   const [candidateName, setCandidateName] = useState("");
-  const [isMicOn, setIsMicOn] = useState(true);
-  const [isVideoOn, setIsVideoOn] = useState(true);
+
   const [sideBarOpen, setSideBarOpen] = useState(true);
-  const [localVideoKey, setLocalVideoKey] = useState(0); // Key to force re-render local video
 
   // Filter participants based on name
   const candidates = remoteParticipants.filter(
@@ -55,36 +61,10 @@ const InterviewerMeetingUI = () => {
       participant.name && participant.name.toLowerCase().includes("interviewer")
   );
 
-  // Toggle microphone
-  const toggleMic = () => {
-    setIsMicOn(!isMicOn);
-    // Add actual microphone toggle logic here
-    console.log("Microphone toggled:", !isMicOn);
-  };
-
-  // Toggle video
-  const toggleVideo = () => {
-    setIsVideoOn(!isVideoOn);
-    // Add actual video toggle logic here
-    console.log("Video toggled:", !isVideoOn);
-
-    // Force re-render of local video when toggling camera
-    if (isVideoOn) {
-      // When disabling video
-      setTimeout(() => {
-        setLocalVideoKey((prev) => prev + 1);
-      }, 100);
-    } else {
-      // When enabling video - refresh after a short delay to allow permissions
-      setTimeout(() => {
-        setLocalVideoKey((prev) => prev + 1);
-      }, 500);
-    }
-  };
-
   // End call
-  const endCall = () => {
+  const endCall = async () => {
     console.log("Ending call");
+    await call.endCall();
     // Add actual call ending logic here
   };
 
@@ -95,6 +75,18 @@ const InterviewerMeetingUI = () => {
     console.log("Interviewers:", interviewers.length);
     console.log("Total participants:", participantCount);
   }, [remoteParticipants, participantCount, candidates, interviewers]);
+
+  const toggleMic = async () => {
+    await microphone.toggle();
+  };
+
+  const handleScreenShare = async () => {
+    await call.screenShare.toggle();
+  };
+
+  const toggleVideo = async () => {
+    await camera.toggle();
+  };
 
   if (callingState !== CallingState.JOINED) {
     return (
@@ -155,10 +147,7 @@ const InterviewerMeetingUI = () => {
 
             {/* Local Video (You) - Added key to force re-render on permission changes */}
             {localParticipant && (
-              <div
-                key={localVideoKey}
-                className="absolute top-4 right-4 w-64 h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-black"
-              >
+              <div className="absolute top-4 right-4 w-64 h-48 rounded-lg overflow-hidden shadow-lg border-2 border-white bg-black">
                 <ParticipantView participant={localParticipant} />
                 <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-sm">
                   You
@@ -170,28 +159,42 @@ const InterviewerMeetingUI = () => {
           {/* Controls */}
           <div className="bg-white border-t py-4 px-6 flex justify-center space-x-4">
             <Button
-              variant={isMicOn ? "default" : "secondary"}
+              variant={!optimisticIsMute ? "default" : "secondary"}
               size="lg"
               className="rounded-full h-12 w-12 p-0"
               onClick={toggleMic}
             >
-              {isMicOn ? (
+              {!optimisticIsMute ? (
                 <Mic className="h-5 w-5" />
               ) : (
                 <MicOff className="h-5 w-5" />
               )}
             </Button>
+
             <Button
-              variant={isVideoOn ? "default" : "secondary"}
+              variant={!isMute ? "default" : "secondary"}
               size="lg"
               className="rounded-full h-12 w-12 p-0"
               onClick={toggleVideo}
             >
-              {isVideoOn ? (
+              {!isMute ? (
                 <Video className="h-5 w-5" />
               ) : (
                 <VideoOff className="h-5 w-5" />
               )}
+            </Button>
+
+            <Button
+              variant={
+                call?.screenShare?.state?.status == "enabled"
+                  ? "default"
+                  : "secondary"
+              }
+              size="lg"
+              className="rounded-full h-12 w-12 p-0"
+              onClick={handleScreenShare}
+            >
+              <MonitorUp className="h-5 w-5" />
             </Button>
             <Button
               variant="destructive"
