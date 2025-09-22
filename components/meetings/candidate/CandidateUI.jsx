@@ -21,6 +21,7 @@ import {
   MonitorUp,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import CodeEditor from "./CodeEditor";
 
 const CandidateMeetingUI = () => {
   const {

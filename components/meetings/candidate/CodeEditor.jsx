@@ -99,7 +99,7 @@ const CodeEditor = () => {
             >
               {languages.map(([lang, version], index) => (
                 <option key={index} value={lang}>
-                  {lang}
+                  {lang + " " + version}
                 </option>
               ))}
             </select>
