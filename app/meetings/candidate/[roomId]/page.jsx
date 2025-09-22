@@ -60,14 +60,49 @@ export default function CandidateMeeting() {
     }
   }, [roomId]);
 
-  if (loading) return <div>Joining interview room...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!client || !call) return <div>Initializing video call...</div>;
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading interview room...</p>
+        </div>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="bg-red-100 text-red-600 p-4 rounded-lg max-w-md">
+            <h2 className="font-semibold">Error</h2>
+            <p className="mt-2">{error}</p>
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Return to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+
+  if (!client || !call)
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="animate-pulse">
+            <div className="h-12 w-12 bg-blue-200 rounded-full mx-auto"></div>
+            <p className="mt-4 text-gray-600">Initializing video call...</p>
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <CandidateMeetingUI /> {/* Use the candidate-specific UI */}
+        <CandidateMeetingUI />
       </StreamCall>
     </StreamVideo>
   );

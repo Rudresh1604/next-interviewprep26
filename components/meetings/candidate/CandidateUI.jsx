@@ -21,67 +21,6 @@ import {
   MonitorUp,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { Editor } from "@monaco-editor/react";
-import CodeEditor2 from "./temp";
-
-// Simple code editor component
-const CodeEditor = ({ code, setCode, language }) => {
-  const [themes, setThemes] = useState([
-    "vs-dark",
-    "hc-black",
-    "light",
-    "dark",
-    "hc-light",
-  ]);
-  const [theme, setTheme] = useState("vs-dark");
-  return (
-    <div className="h-full flex flex-col border rounded-lg overflow-hidden">
-      <div className="bg-gray-100 px-4 py-2 border-b flex justify-between items-center">
-        <select
-          className="text-sm px-2 py-1 border rounded"
-          value={language}
-          onChange={(e) => {
-            /* Handle language change */
-          }}
-        >
-          <option value="javascript">JavaScript</option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-          <option value="cpp">C++</option>
-        </select>
-        <div className="flex space-x-2">
-          <Button size="sm" variant="outline">
-            <Play className="h-4 w-4 mr-1" /> Run
-          </Button>
-          <Button size="sm" variant="outline">
-            <Download className="h-4 w-4 mr-1" /> Download
-          </Button>
-        </div>
-      </div>
-      <Editor
-        options={{
-          minimap: {
-            enabled: false,
-          },
-        }}
-        height="75vh"
-        theme={theme}
-        language={language}
-        defaultValue={CODE_SNIPPETS[language]}
-        onMount={onMount}
-        value={value}
-        onChange={(value) => setValue(value)}
-      />
-      <div className="bg-gray-100 px-4 py-2 border-t text-sm">
-        <div className="font-medium">Output:</div>
-        <div className="mt-1 p-2 bg-white border rounded">
-          {/* Output will appear here */}
-          Run your code to see output
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const CandidateMeetingUI = () => {
   const {
@@ -344,7 +283,7 @@ const CandidateMeetingUI = () => {
                   <h2 className="font-semibold text-gray-700 mb-3">
                     Code Editor
                   </h2>
-                  <CodeEditor2 />
+                  <CodeEditor />
                 </div>
               )}
             </div>
