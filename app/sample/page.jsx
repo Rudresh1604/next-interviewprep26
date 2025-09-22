@@ -1,13 +1,11 @@
-import VideoRender from "@/components/meetings/interviewer/VideoRender";
+import CodeEditor from "@/components/meetings/candidate/CodeEditor";
 import React from "react";
 
 const page = () => {
   return (
     <div className="w-full my-5 px-3 bg-gray-50 lg:px-5">
       Sample
-      <div className="w-full p-3 border-gray-300  border-2 rounded-xl">
-        <VideoRender />
-      </div>
+      <CodeEditor />
     </div>
   );
 };
