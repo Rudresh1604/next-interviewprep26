@@ -21,9 +21,19 @@ import {
   MonitorUp,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { Editor } from "@monaco-editor/react";
+import CodeEditor2 from "./temp";
 
 // Simple code editor component
 const CodeEditor = ({ code, setCode, language }) => {
+  const [themes, setThemes] = useState([
+    "vs-dark",
+    "hc-black",
+    "light",
+    "dark",
+    "hc-light",
+  ]);
+  const [theme, setTheme] = useState("vs-dark");
   return (
     <div className="h-full flex flex-col border rounded-lg overflow-hidden">
       <div className="bg-gray-100 px-4 py-2 border-b flex justify-between items-center">
@@ -48,12 +58,19 @@ const CodeEditor = ({ code, setCode, language }) => {
           </Button>
         </div>
       </div>
-      <textarea
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-        className="flex-1 p-4 font-mono text-sm w-full resize-none focus:outline-none"
-        placeholder="Write your code here..."
-        spellCheck="false"
+      <Editor
+        options={{
+          minimap: {
+            enabled: false,
+          },
+        }}
+        height="75vh"
+        theme={theme}
+        language={language}
+        defaultValue={CODE_SNIPPETS[language]}
+        onMount={onMount}
+        value={value}
+        onChange={(value) => setValue(value)}
       />
       <div className="bg-gray-100 px-4 py-2 border-t text-sm">
         <div className="font-medium">Output:</div>
@@ -327,11 +344,7 @@ const CandidateMeetingUI = () => {
                   <h2 className="font-semibold text-gray-700 mb-3">
                     Code Editor
                   </h2>
-                  <CodeEditor
-                    code={code}
-                    setCode={setCode}
-                    language={selectedLanguage}
-                  />
+                  <CodeEditor2 />
                 </div>
               )}
             </div>
