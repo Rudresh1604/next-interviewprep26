@@ -10,6 +10,7 @@ import {
   User2Icon,
   WalletCards,
   ClipboardList,
+  Video,
 } from "lucide-react";
 
 export const SideBarOptions = [
@@ -42,6 +43,11 @@ export const SideBarOptions = [
     name: "Settings",
     icon: Settings,
     path: "/setting",
+  },
+  {
+    name: "Meetings",
+    icon: Video,
+    path: "/my-meetings",
   },
 ];
 
@@ -81,6 +87,7 @@ export const CODE_SNIPPETS = {
 export const LANGUAGE_VERSIONS = {
   javascript: "18.15.0",
   typescript: "5.0.3",
+  cpp: "10",
   python: "3.10.0",
   java: "15.0.2",
   csharp: "6.12.0",

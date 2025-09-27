@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-const CreateInterview = () => {
+const CreateQuiz = () => {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState();
@@ -74,4 +74,4 @@ const CreateInterview = () => {
   );
 };
 
-export default CreateInterview;
+export default CreateQuiz;
