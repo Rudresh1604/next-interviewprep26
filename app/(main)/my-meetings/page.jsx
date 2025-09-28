@@ -1,5 +1,6 @@
 "use client";
 import { useUser } from "@/app/provider";
+import CreateMeeting from "@/components/meetings/interviewer/CreateMeeting";
 import QuizCard from "@/components/Quiz/create-quiz/QuizCard";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/services/supabaseClient";
@@ -24,6 +25,8 @@ const page = () => {
       console.log(error);
     }
   };
+  console.log(user);
+
   const handleCreateMeeting = () => {
     router.push(`/dashboard/create-meeting`);
   };
@@ -37,12 +40,8 @@ const page = () => {
           <h2 className="font-bold text-xl">My Meeting List</h2>
           <h2 className="text-xl font-bold">All Previously Created Meeting</h2>
         </div>
-        <Button
-          className="cursor-pointer"
-          onClick={() => handleCreateMeeting()}
-        >
-          + Create New Meetings
-        </Button>
+
+        <CreateMeeting user={user} />
       </div>
       <div className="w-full mt-5 bg-white rounded-2xl border border-gray-200">
         {meetingList?.length == 0 && (

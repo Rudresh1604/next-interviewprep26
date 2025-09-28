@@ -5,8 +5,9 @@ import {
   StreamVideo,
   StreamCall,
 } from "@stream-io/video-react-sdk";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CandidateMeetingUI from "@/components/meetings/candidate/CandidateUI";
+import { useUser } from "@/app/provider";
 
 export default function CandidateMeeting() {
   const [client, setClient] = useState(null);
@@ -15,6 +16,14 @@ export default function CandidateMeeting() {
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const roomId = params.roomId;
+  const router = useRouter();
+  const { user } = useUser();
+  useEffect(() => {
+    if (user) {
+      // redirect to interviewer page
+      router.push("/meetings/interviewer/" + roomId);
+    }
+  }, [user]);
 
   useEffect(() => {
     const init = async () => {
