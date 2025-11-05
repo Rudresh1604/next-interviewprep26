@@ -121,6 +121,7 @@ Key Guidelines:
     vapi.on("call-end", () => {
       console.log("Call ended");
       setCallActive(false);
+      generateFeedback();
       toast("Call Ended...");
     });
     return () => {

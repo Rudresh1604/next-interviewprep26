@@ -1,41 +1,102 @@
 "use client";
-
 import { UserDetailContext } from "@/context/UserDetailContext";
 import { supabase } from "@/services/supabaseClient";
 import React, { useContext, useEffect, useState } from "react";
 
 const Provider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (!user) CreateNewUser();
+    checkUser();
   }, []);
 
-  const CreateNewUser = async () => {
-    await supabase.auth.getUser().then(async ({ data: { user } }) => {
-      // check if user already exist or not
+  const checkUser = async () => {
+    try {
+      setLoading(true);
+
+      // First check if there's an active session
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError) {
+        console.error("Session error:", sessionError);
+        setLoading(false);
+        return;
+      }
+
+      if (!session) {
+        console.log("No active session");
+        setLoading(false);
+        return;
+      }
+
+      // Now get the user with the valid session
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("User error:", userError);
+        setLoading(false);
+        return;
+      }
+
+      if (user) {
+        await createOrGetUser(user);
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createOrGetUser = async (authUser) => {
+    try {
+      // Check if user already exists
       let { data: Users, error } = await supabase
         .from("Users")
         .select("*")
-        .eq("email", user?.email);
+        .eq("email", authUser?.email)
+        .single();
 
-      if (Users?.length == 0) {
-        const { data, error } = await supabase.from("Users").insert([
-          {
-            name: user?.user_metadata?.name,
-            email: user?.email,
-            picture: user?.user_metadata?.picture,
-          },
-        ]);
-        console.log(data);
+      if (error || !Users) {
+        // User doesn't exist, create new one
+        const { data, error: insertError } = await supabase
+          .from("Users")
+          .insert([
+            {
+              name:
+                authUser?.user_metadata?.name || authUser?.email?.split("@")[0],
+              email: authUser?.email,
+              picture: authUser?.user_metadata?.picture,
+            },
+          ])
+          .select()
+          .single();
+
+        if (insertError) {
+          console.error("Error creating user:", insertError);
+          return;
+        }
+
         setUser(data);
-        console.log(error);
-        return;
+        console.log("New user created:", data);
+      } else {
+        setUser(Users);
+        console.log("Existing user found:", Users);
       }
-      setUser(Users[0]);
-    });
+    } catch (error) {
+      console.error("Error in createOrGetUser:", error);
+    }
   };
+
   return (
-    <UserDetailContext.Provider value={{ user, setUser }}>
+    <UserDetailContext.Provider value={{ user, setUser, loading }}>
       <div>{children}</div>
     </UserDetailContext.Provider>
   );
