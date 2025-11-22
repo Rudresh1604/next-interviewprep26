@@ -17,6 +17,7 @@ import { ChevronDownIcon } from "lucide-react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/services/supabaseClient";
+import Link from "next/link";
 
 const CreateMeeting = ({ user }) => {
   const [meetingTitle, setMeetingTitle] = useState("");
@@ -198,13 +199,21 @@ const CreateMeeting = ({ user }) => {
             <DialogClose asChild>
               <Button type="button">Cancel</Button>
             </DialogClose>
-
             <Button
               type="button"
               disabled={loading || !linkId}
               onClick={onCopyLink}
             >
               Copy Link
+            </Button>
+            <Button type="button" disabled={loading || !linkId}>
+              <Link
+                href={`/meetings/interviewer/${linkId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Join Link
+              </Link>
             </Button>
 
             <Button onClick={() => getMeetingLink()} disabled={loading}>

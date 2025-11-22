@@ -25,6 +25,7 @@ import {
   MonitorUp,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { supabase } from "@/services/supabaseClient";
 
 const InterviewerMeetingUI = () => {
   const {
@@ -60,6 +61,11 @@ const InterviewerMeetingUI = () => {
     (participant) =>
       participant.name && participant.name.toLowerCase().includes("interviewer")
   );
+
+  const handleSaveNotes = async () => {
+    // fun to save note in supabase
+    const { data, error } = await supabase.from("Meetings").findOne();
+  };
 
   // End call
   const endCall = async () => {
@@ -340,7 +346,9 @@ const InterviewerMeetingUI = () => {
                     />
                   </div>
 
-                  <Button className="w-full">Save Notes</Button>
+                  <Button className="w-full" onClick={handleSaveNotes}>
+                    Save Notes
+                  </Button>
                 </div>
               )}
             </div>
