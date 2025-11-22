@@ -127,7 +127,7 @@ export default function InterviewerMeeting() {
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <VideoRender />
+        <VideoRender meetingId={roomId} />
       </StreamCall>
     </StreamVideo>
   );

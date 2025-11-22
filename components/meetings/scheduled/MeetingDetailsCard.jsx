@@ -36,32 +36,31 @@ const MeetingDetailsCard = ({ meeting }) => {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{meeting?.title} </DialogTitle>
-              <DialogDescription>
-                <div className="text-xl text-black md:text-2xl font-medium">
-                  Meeting Created At :{" "}
-                  {formatMeetingDateTime(meeting?.created_at)?.date}{" "}
-                  {"  " + formatMeetingDateTime(meeting?.created_at)?.time}
+
+              <h1 className="text-xl text-black md:text-2xl font-medium">
+                Meeting Created At :{" "}
+                {formatMeetingDateTime(meeting?.created_at)?.date}{" "}
+                {"  " + formatMeetingDateTime(meeting?.created_at)?.time}
+              </h1>
+              {meeting?.candidateNotes &&
+              meeting?.candidateNotes?.length > 0 ? (
+                <div>
+                  {meeting?.candidateNotes?.map((notes, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col mt-3 md:mt-5 px-2 py-3 border border-gray-200 rounded-lg"
+                    >
+                      <h1 className="text-xl mb-2 text-black">
+                        {" "}
+                        {notes?.candidateName}{" "}
+                      </h1>
+                      <>{notes?.note} </>
+                    </div>
+                  ))}
                 </div>
-                {meeting?.candidateNotes &&
-                meeting?.candidateNotes?.length > 0 ? (
-                  <div>
-                    {meeting?.candidateNotes?.map((notes, index) => (
-                      <div
-                        key={index}
-                        className="flex flex-col mt-3 md:mt-5 px-2 py-3 border border-gray-200 rounded-lg"
-                      >
-                        <h1 className="text-xl mb-2 text-black">
-                          {" "}
-                          {notes?.candidateName}{" "}
-                        </h1>
-                        <>{notes?.note} </>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <h1>No Notes are present !</h1>
-                )}
-              </DialogDescription>
+              ) : (
+                <h1>No Notes are present !</h1>
+              )}
             </DialogHeader>
           </DialogContent>
         </Dialog>

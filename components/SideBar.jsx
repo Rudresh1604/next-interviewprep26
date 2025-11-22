@@ -10,14 +10,29 @@ import {
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 import { SideBarOptions } from "@/services/Constants";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { supabase } from "@/services/supabaseClient";
 
 export function AppSidebar() {
   const pathName = usePathname();
   const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Logout error:", error);
+        return;
+      }
+      router.push("/signin");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   return (
     <Sidebar>
@@ -29,7 +44,6 @@ export function AppSidebar() {
           width={90}
           height={90}
         />
-
         <Button
           className="w-full mt-3 lg:mt-5 cursor-pointer"
           onClick={() => {
@@ -62,12 +76,23 @@ export function AppSidebar() {
                           pathName == option.path && "text-primary"
                         }`}
                       >
-                        {option.name}{" "}
+                        {option.name}
                       </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem className="p-1">
+                <SidebarMenuButton
+                  onClick={handleLogout}
+                  className="p-5 cursor-pointer hover:bg-red-50 text-red-600 flex items-center gap-3"
+                >
+                  <LogOut className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-[16px] font-medium text-red-600 whitespace-nowrap">
+                    Logout
+                  </span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
         </SidebarGroup>

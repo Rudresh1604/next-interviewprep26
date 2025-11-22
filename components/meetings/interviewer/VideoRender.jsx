@@ -26,8 +26,11 @@ import {
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/services/supabaseClient";
+import { toast } from "sonner";
 
-const InterviewerMeetingUI = () => {
+const InterviewerMeetingUI = ({ meetingId }) => {
+  console.log(meetingId, " roomId from viedo render");
+
   const {
     useCallCallingState,
     useLocalParticipant,
@@ -63,8 +66,56 @@ const InterviewerMeetingUI = () => {
   );
 
   const handleSaveNotes = async () => {
-    // fun to save note in supabase
-    const { data, error } = await supabase.from("Meetings").findOne();
+    try {
+      // First check if meeting exists
+      const { data: existingMeeting, error: fetchError } = await supabase
+        .from("Meetings")
+        .select("*")
+        .eq("meeting_id", meetingId)
+        .single();
+
+      let result;
+
+      if (existingMeeting) {
+        // Update existing meeting
+        const updatedNotes = updateCandidateNotes(
+          existingMeeting.candidateNotes,
+          candidateName,
+          note
+        );
+
+        result = await supabase
+          .from("Meetings")
+          .update({ candidateNotes: updatedNotes })
+          .eq("meeting_id", meetingId);
+      } else {
+        toast("Meeting is not valid !..");
+        await call.endCall();
+      }
+
+      if (result.error) throw result.error;
+      console.log("Notes saved successfully");
+    } catch (error) {
+      toast(error?.message);
+      console.error("Error saving notes:", error);
+    }
+  };
+
+  // Helper function to update candidate notes
+  const updateCandidateNotes = (existingNotes, candidateName, note) => {
+    if (!existingNotes) return [{ candidateName, note: note }];
+
+    const candidateIndex = existingNotes.findIndex(
+      (note) => note.candidateName === candidateName
+    );
+
+    if (candidateIndex > -1) {
+      const updatedNotes = [...existingNotes];
+      updatedNotes[candidateIndex].note = note;
+      return updatedNotes;
+    } else {
+      return [...existingNotes, { candidateName, note: note }];
+    }
   };
 
   // End call
