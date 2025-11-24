@@ -19,6 +19,10 @@ const QuizQuestionList = ({ formData, onCreateLink, setQuestionLength }) => {
     console.log(loading);
 
     try {
+      toast(
+        "This feature uses private API credentials and is disabled in the public demo."
+      );
+      return;
       const result = await axios.post("/api/ai-quiz", { ...formData });
       console.log(result.data);
       console.log(result.data.data.quizQuestions);

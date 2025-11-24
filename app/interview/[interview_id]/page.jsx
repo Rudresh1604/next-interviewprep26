@@ -45,6 +45,10 @@ const InterviewPage = () => {
   const onJoinInterview = async () => {
     try {
       setLoading(true);
+      toast(
+        "This feature is restricted and can only be accessed by the project owner !"
+      );
+      return;
       const { data: Interviews, error } = await supabase
         .from("Interviews")
         .select("*")
